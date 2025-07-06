@@ -24,6 +24,8 @@ const Home: NextPage = () => {
     } catch (err: any) {
       console.log(err);
       setError(err.message);
+    } finally {
+      setError("");
     }
   };
 
