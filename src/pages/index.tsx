@@ -21,11 +21,10 @@ const Home: NextPage = () => {
       if (result.message) {
         throw new Error(result.message);
       }
+      setError("");
     } catch (err: any) {
       console.log(err);
       setError(err.message);
-    } finally {
-      setError("");
     }
   };
 
