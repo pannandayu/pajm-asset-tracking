@@ -1,26 +1,462 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    font-family: monospace, sans-serif;
+    font-weight: bold;
+    background-color: #f0f0f0;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.shadow-retro {
+  box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.2);
+  border: 2px solid black !important; /* Add this line */
+}
+
+/* Retro styling - responsive */
+.retro-container {
+  background-color: #f0f0f0;
+  min-height: 100vh;
+  padding: 1rem;
+  font-family: "Courier New", monospace;
+}
+
+.retro-card {
+  background-color: white;
+  border: 3px solid black;
+  box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.2);
+  padding: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.retro-title {
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid black;
+  padding-bottom: 0.5rem;
+  text-align: center;
+}
+
+.retro-detail-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.retro-detail-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed #ccc;
+}
+
+.retro-label {
+  font-weight: bold;
+  color: #333;
+  font-size: clamp(0.9rem, 3vw, 1rem);
+}
+
+.retro-value {
+  color: #555;
+  font-size: clamp(0.9rem, 3vw, 1rem);
+  word-break: break-word;
+}
+
+/* Desktop layout */
+@media (min-width: 768px) {
+  .retro-container {
+    padding: 2rem;
+  }
+
+  .retro-card {
+    padding: 2rem;
+  }
+
+  .retro-detail-row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+}
+
+/* Retro Catalog Styling - Mobile First */
+.retro-catalog-container {
+  min-height: 100vh;
+  background-color: #f0f0f0;
+  font-family: "Courier New", monospace;
+  padding: 1rem;
+}
+
+.retro-catalog-title {
+  font-size: clamp(1.5rem, 6vw, 2rem);
+  text-align: center;
+  color: #d40000;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+  border-bottom: 3px double #333;
+  padding-bottom: 0.5rem;
+}
+
+.retro-catalog-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.retro-catalog-group {
+  background: white;
+  border: 2px solid black;
+  border-radius: 5px;
+  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+}
+
+.retro-catalog-letter {
+  font-size: clamp(1.2rem, 5vw, 1.5rem);
+  color: #000080;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px dashed #ccc;
+  padding-bottom: 0.25rem;
+}
+
+.retro-catalog-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.retro-catalog-item {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+.retro-catalog-item:hover {
+  background-color: #f8f8f8;
+  border-left: 3px solid #000080;
+}
+
+.retro-catalog-name {
+  font-weight: bold;
+  color: #000080;
+  font-size: clamp(0.9rem, 4vw, 1rem);
+}
+
+.retro-catalog-id {
+  color: #555;
+  font-size: clamp(0.8rem, 3vw, 0.9rem);
+}
+
+.retro-catalog-loading {
+  text-align: center;
+  color: #333;
+  font-size: clamp(1rem, 4vw, 1.2rem);
+}
+
+/* Desktop Styles */
+@media (min-width: 768px) {
+  .retro-catalog-container {
+    padding: 2rem;
+  }
+
+  .retro-catalog-group {
+    padding: 1.5rem;
+  }
+
+  .retro-catalog-item {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .retro-catalog-name {
+    flex: 2;
+  }
+
+  .retro-catalog-id {
+    flex: 1;
+    text-align: right;
+  }
+}
+
+/* Retro Home Styling - Mobile First */
+.retro-home-container {
+  min-height: 100vh;
+  background-color: #f0f0f0;
+  font-family: "Courier New", monospace;
+  padding: 1rem;
+}
+
+.retro-home-main {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.retro-home-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.retro-home-title {
+  font-size: clamp(1.5rem, 6vw, 2rem);
+  color: #d40000;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+}
+
+.retro-home-subtitle {
+  font-size: clamp(0.9rem, 3vw, 1.1rem);
+  color: #555;
+}
+
+.retro-home-error {
+  color: #d40000;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: clamp(0.9rem, 3vw, 1rem);
+}
+
+.retro-home-content {
+  background: white;
+  border: 2px solid black;
+  border-radius: 5px;
+  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.retro-home-welcome {
+  font-size: clamp(1.1rem, 4vw, 1.3rem);
+  color: #000080;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.retro-home-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.retro-home-card {
+  display: block;
+  background: white;
+  border: 2px solid black;
+  border-radius: 5px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.retro-home-card:hover {
+  background-color: #f8f8f8;
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1);
+  transform: translate(-2px, -2px);
+}
+
+.retro-home-emoji {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.retro-home-card:hover .retro-home-emoji {
+  transform: scale(1.1);
+}
+
+.retro-home-card-title {
+  font-size: clamp(1.1rem, 4vw, 1.3rem);
+  color: #000080;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.retro-home-card-text {
+  font-size: clamp(0.8rem, 3vw, 0.9rem);
+  color: #555;
+  line-height: 1.4;
+}
+
+.retro-home-logout {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  margin: 0 auto;
+  background: #000080;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 0.75rem;
+  font-family: "Courier New", monospace;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.retro-home-logout:hover {
+  background: #d40000;
+}
+
+/* Login Form Styles */
+.retro-login-title {
+  font-size: clamp(1.3rem, 5vw, 1.5rem);
+  color: #000080;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.retro-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.retro-login-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.retro-login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.retro-login-label {
+  font-size: clamp(0.9rem, 3vw, 1rem);
+  color: #333;
+  font-weight: bold;
+}
+
+.retro-login-input {
+  padding: 0.75rem;
+  border: 2px solid #333;
+  border-radius: 3px;
+  font-family: "Courier New", monospace;
+  font-size: clamp(0.9rem, 3vw, 1rem);
+}
+
+.retro-login-button {
+  background: #000080;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 0.75rem;
+  font-family: "Courier New", monospace;
+  font-weight: bold;
+  font-size: clamp(0.9rem, 3vw, 1rem);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.retro-login-button:hover {
+  background: #006600;
+}
+
+/* Desktop Styles */
+@media (min-width: 768px) {
+  .retro-home-container {
+    padding: 2rem;
+  }
+
+  .retro-home-content {
+    padding: 2rem;
+  }
+
+  .retro-home-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .retro-login-form {
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 1.5rem;
+  }
+
+  .retro-login-fields {
+    flex-direction: row;
+    flex: 1;
+    gap: 1.5rem;
+  }
+
+  .retro-login-field {
+    flex: 1;
+  }
+}
+
+/* Retro Back Button Styles */
+.retro-header-wrapper {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.retro-back-button {
+  /* position: absolute; */
+  background: none;
+  border: none;
+  color: #000080;
+  font-family: "Courier New", monospace;
+  font-weight: bold;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  margin: 0;
+}
+
+.retro-back-button:hover {
+  color: #d40000;
+  border: 2px solid #000080;
+  background: #f8f8f8;
+}
+
+/* Adjust title position when back button is present */
+.retro-title {
+  margin-top: 0.5rem;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .retro-back-button {
+    position: static;
+    margin-bottom: 0.5rem;
+    display: inline-block;
+  }
+
+  .retro-header-wrapper {
+    text-align: center;
+  }
+
+  .retro-title {
+    margin-top: 0;
+  }
+}
+
+.detail-title {
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+  font-weight: bolder;
+}
+
+.print-back {
+  flex: auto;
 }
