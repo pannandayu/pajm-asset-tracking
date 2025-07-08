@@ -5,6 +5,7 @@ import { assetAtom } from "@/context/jotai";
 import { Asset } from "@/types";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -35,18 +36,39 @@ const AssetDetail = () => {
 
   useEffect(() => {
     if (auth.loading) return;
+
     if (!auth.user) {
-      router.push("/");
+      router.replace("/"); // Use replace instead of push
       return;
     }
 
     if (!asset) {
-      handleBack();
-    } else {
-      const selected = asset.find((el) => el.id === assetId);
-      setSelectedAsset(selected);
+      router.replace("/catalog");
+      return;
     }
-  }, [auth.loading, auth.user, assetId, selectedAsset]);
+
+    const selected = asset.find((el) => el.id === assetId);
+    if (!selected) {
+      router.replace("/catalog");
+      return;
+    }
+
+    setSelectedAsset({
+      ...selected,
+      current_book_value: calculateCurrentBookValue(selected),
+    });
+  }, [auth.loading, auth.user, assetId, asset]);
+
+  const calculateCurrentBookValue = (selectedAsset: Asset) => {
+    const activeDate = selectedAsset.active_date;
+    const purcPrice = selectedAsset.purchase_price;
+    const deprRate = selectedAsset.depreciation_rate;
+    const monthCount = dayjs(new Date()).diff(activeDate, "month");
+    const deprValue = Math.trunc(
+      (deprRate / 100) * (monthCount / 12) * purcPrice
+    );
+    return purcPrice - deprValue;
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-amber-300 p-4 font-mono">
@@ -58,10 +80,28 @@ const AssetDetail = () => {
             </h1>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          {auth.user && auth.user.tagging === "0" ? (
+            <div className="flex justify-center">
+              <Image
+                src={selectedAsset.image_url}
+                alt={selectedAsset.id + " - " + selectedAsset.name}
+                height={300}
+                width={300}
+              />
+            </div>
+          ) : (
+            <Image
+              src={selectedAsset.image_url}
+              alt={selectedAsset.id + " - " + selectedAsset.name}
+              height={300}
+              width={300}
+            />
+          )}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 mt-4">
             <div>
               <h1 className="text-2xl font-bold mb-4 pb-2 border-b border-amber-400">
-              TECHNICAL
+                TECHNICAL
               </h1>
               <DataRow label="Asset ID" data={selectedAsset.id} />
               <DataRow label="Asset Name" data={selectedAsset.name} />
@@ -78,16 +118,14 @@ const AssetDetail = () => {
                 data={selectedAsset.part_number || "-"}
               />
               <DataRow
-                label="Dept. Owner"
+                label="Owner Dept."
                 data={selectedAsset.department_owner}
               />
               <DataRow label="Primary User" data={selectedAsset.primary_user} />
               <DataRow
                 label="First Usage/Installation Date"
                 data={
-                  dayjs(selectedAsset.active_date)
-                    .locale("id")
-                    .format("DD MMMM YYYY") || "-"
+                  dayjs(selectedAsset.active_date).format("DD MMMM YYYY") || "-"
                 }
               />
               <DataRow label="Status" data={selectedAsset.status} />
@@ -99,9 +137,9 @@ const AssetDetail = () => {
                 </h1>
                 <DataRow
                   label="Purchase Date"
-                  data={dayjs(selectedAsset.purchase_date)
-                    .locale("id")
-                    .format("DD MMMM YYYY")}
+                  data={dayjs(selectedAsset.purchase_date).format(
+                    "DD MMMM YYYY"
+                  )}
                 />
                 <DataRow
                   label="Purchase Order Number"

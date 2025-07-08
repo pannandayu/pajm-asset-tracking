@@ -5,6 +5,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Asset } from "@/types";
 import { useAtom } from "jotai";
 import { assetAtom } from "@/context/jotai";
+import AssetModal from "@/components/FormModalAsset";
 
 export const groupAsset = (data: Asset[]) => {
   return data.reduce((acc, asset) => {
@@ -21,6 +22,7 @@ const CatalogPage: NextPage = () => {
   const [_, setAsset] = useAtom<Asset[] | null>(assetAtom);
   const [grouped, setGrouped] = useState<Record<string, Asset[]>>();
   const [sortedLetters, setSortedLetters] = useState<string[]>();
+  const [assetModal, setAssetModal] = useState(false);
 
   const fetchAsset = async () => {
     try {
@@ -69,6 +71,14 @@ const CatalogPage: NextPage = () => {
             <p className="text-amber-400 text-sm">
               DATABASE STATUS: OPERATIONAL
             </p>
+            <div className="flex justify-between gap-4">
+              <button
+                onClick={() => setAssetModal(true)}
+                className="bg-amber-600 hover:bg-amber-500 text-black font-bold py-2 px-4 border-b-4 border-amber-700 hover:border-amber-600 rounded-sm transition-all text-sm mt-2"
+              >
+                RECORD NEW ASSET
+              </button>
+            </div>
           </div>
 
           {/* Catalog Content */}
@@ -104,9 +114,9 @@ const CatalogPage: NextPage = () => {
                           <div className="flex items-center gap-4 mt-1 sm:mt-0">
                             <span
                               className={`text-xs px-2 py-1 rounded-sm ${
-                                asset.status === "Aktif"
-                                  ? "bg-amber-800 text-amber-200"
-                                  : asset.status === "Nonaktif"
+                                asset.status === "Active"
+                                  ? "bg-black text-amber-200"
+                                  : asset.status === "Inactive"
                                   ? "bg-yellow-800 text-yellow-200"
                                   : "bg-red-800 text-red-200"
                               }`}
@@ -131,6 +141,13 @@ const CatalogPage: NextPage = () => {
               </div>
             )}
           </div>
+
+          {assetModal && (
+            <AssetModal
+              onClose={() => setAssetModal(false)}
+              onSubmit={() => {}}
+            />
+          )}
 
           {/* Terminal Footer */}
           <div className="bg-gray-800 border-2 border-amber-400 p-2 mt-6 text-center text-xs text-amber-400">

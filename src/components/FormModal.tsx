@@ -419,7 +419,7 @@ const EventModal = ({
                     min="0"
                   />
                 </div>
-                {auth.user && auth.user.tagging && (
+                {auth.user && auth.user.tagging === "0" && (
                   <div>
                     <label className="block text-sm mb-1 font-bold">
                       COST (Rp):

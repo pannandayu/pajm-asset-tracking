@@ -191,9 +191,16 @@ const EventIndex = () => {
               filteredLogs.map((event) => (
                 <div
                   key={event.event_id}
-                  className="bg-gray-800 rounded-sm border-2 border-amber-400 hover:border-amber-300 transition-all shadow-lg shadow-amber-400/10"
+                  className="bg-gray-800 rounded-sm border-2 border-amber-400 hover:border-amber-300 transition-all shadow-lg shadow-amber-400/10 cursor-pointer hover:scale-102"
                 >
-                  <div className="p-4">
+                  <div
+                    className="p-4"
+                    onClick={() =>
+                      router.push(
+                        `${router.basePath}/events/detail?id=${event.event_id}`
+                      )
+                    }
+                  >
                     {/* Event Header */}
                     <div className="flex flex-wrap items-baseline gap-2 mb-2">
                       <span

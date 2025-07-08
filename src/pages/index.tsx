@@ -11,9 +11,12 @@ const Home: NextPage = () => {
     password: "",
   });
   const [error, setError] = useState("");
+  const [isLogin, setIsLogin] = useState(false);
+  const [isLogout, setIsLogout] = useState(false);
 
   const loginHandler = async (e: FormEvent) => {
     e.preventDefault();
+    setIsLogin(true);
 
     try {
       const result = await auth.login(formData.username, formData.password);
@@ -25,6 +28,20 @@ const Home: NextPage = () => {
     } catch (err: any) {
       console.log(err);
       setError(err.message);
+    } finally {
+      setIsLogin(false);
+    }
+  };
+
+  const logoutHandler = async (e: FormEvent) => {
+    e.preventDefault();
+    setIsLogout(true);
+    try {
+      await auth.logout();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLogout(false);
     }
   };
 
@@ -102,17 +119,10 @@ const Home: NextPage = () => {
               </div>
 
               <button
-                onClick={async (e) => {
-                  e.preventDefault();
-                  try {
-                    await auth.logout();
-                  } catch (err) {
-                    console.log(err);
-                  }
-                }}
+                onClick={logoutHandler}
                 className="w-full bg-red-800 hover:bg-red-700 text-white border-2 border-red-500 py-2 px-4 font-bold transition-all"
               >
-                LOGOUT
+                {isLogout ? "LOGGING OUT..." : "LOGOUT"}
               </button>
             </Fragment>
           ) : (
@@ -176,7 +186,7 @@ const Home: NextPage = () => {
                   type="submit"
                   className="w-full bg-amber-700 hover:bg-amber-600 text-black border-2 border-amber-500 py-2 px-4 font-bold transition-all"
                 >
-                  AUTHENTICATE
+                  {isLogin ? "AUTHENTICATING..." : "AUTHENTICATE"}
                 </button>
               </form>
             </Fragment>

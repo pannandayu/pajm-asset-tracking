@@ -18,18 +18,18 @@ const PrintableAsset = ({
   companyLogoUrl,
 }: PrintableAssetProps) => {
   const technicalFields = [
-    { label: "ID", value: asset.id },
-    { label: "Nama", value: asset.name },
-    { label: "Merek", value: asset.brand || "-" },
+    { label: "Asset ID", value: asset.id },
+    { label: "Asset Name", value: asset.name },
+    { label: "Brand", value: asset.brand || "-" },
     { label: "Model", value: asset.model || "-" },
-    { label: "Kategori", value: asset.category },
-    { label: "Sub-Kategori", value: asset.sub_category },
-    { label: "No. Seri", value: asset.serial_number || "-" },
-    { label: "No. Part", value: asset.part_number || "-" },
-    { label: "Div. Pemilik", value: asset.department_owner },
-    { label: "Pengguna Utama", value: asset.primary_user },
+    { label: "Category", value: asset.category },
+    { label: "Sub-Category", value: asset.sub_category },
+    { label: "Serial Number", value: asset.serial_number || "-" },
+    { label: "Part Number", value: asset.part_number || "-" },
+    { label: "Owner Dept.", value: asset.department_owner },
+    { label: "Primary User", value: asset.primary_user },
     {
-      label: "Tanggal Penggunaan Pertama",
+      label: "First Usage/Installation Date",
       value: asset.active_date
         ? dayjs(asset.active_date).locale("id").format("DD MMMM YYYY")
         : "-",
@@ -39,26 +39,26 @@ const PrintableAsset = ({
 
   const financialFields = [
     {
-      label: "Tanggal Pembelian",
+      label: "Purchase Date",
       value: asset.purchase_date
         ? dayjs(asset.active_date).locale("id").format("DD MMMM YYYY")
         : "-",
     },
-    { label: "No. Purchase Order", value: asset.purchase_order_number },
+    { label: "Purchase Order Number", value: asset.purchase_order_number },
     { label: "Vendor", value: asset.vendor_supplier },
-    { label: "Garansi", value: asset.warranty },
-    { label: "Harga Pembelian", value: formatCurrency(asset.purchase_price) },
+    { label: "Warranty", value: asset.warranty },
+    { label: "Purchase Price", value: formatCurrency(asset.purchase_price) },
     {
-      label: "Ekspektasi Umur Guna",
+      label: "Expected Lifespan",
       value: `${asset.expected_lifespan} tahun`,
     },
-    { label: "Metode Depresiasi", value: asset.depreciation_method },
+    { label: "Depreciation Method", value: asset.depreciation_method },
     {
-      label: "Laju Depresiasi per Tahun",
+      label: "Annual Depreciation Rate",
       value: `${asset.depreciation_rate}%`,
     },
     {
-      label: "Nilai Buku Sekarang",
+      label: "Current Book Value",
       value: formatCurrency(asset.current_book_value),
     },
   ];
@@ -139,7 +139,7 @@ const PrintableAsset = ({
       // Header
       drawText("ASSET DETAILS", 50, 800, 20, true);
       drawText(
-        `Dikeluarkan: ${dayjs().locale("id").format("DD MMMM YYYY HH:mm")}`,
+        `Document generated on: ${dayjs().format("DD MMMM YYYY HH:mm")}`,
         50,
         775,
         10
@@ -227,7 +227,7 @@ const PrintableAsset = ({
             />
           </div>
           <h2 className="text-xl font-bold mb-4 pb-2 border-b border-amber-400">
-            Informasi Teknis
+            Technical
           </h2>
           {/* todo -- ganti bahasa indonesia */}
           <div className="space-y-3">
@@ -262,10 +262,7 @@ const PrintableAsset = ({
       </div>
 
       <div className="my-8 text-sm text-amber-400">
-        <p>
-          Dokumen dikeluarkan pada:{" "}
-          {dayjs().locale("id").format("DD MMMM YYYY HH:mm")}
-        </p>
+        <p>Document generated on: {dayjs().format("DD MMMM YYYY HH:mm")}</p>
       </div>
 
       <div className="flex gap-2">
