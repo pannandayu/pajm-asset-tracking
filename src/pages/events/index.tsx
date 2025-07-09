@@ -38,13 +38,6 @@ const EventIndex = () => {
   const [eventLog, setEventLog] = useAtom(eventAtom);
   const [asset, setAsset] = useAtom(assetAtom);
 
-  const sort = (list: any[]) => {
-    return list.sort(
-      (a: any, b: any) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    );
-  };
-
   const filter = (list: any[]) => {
     return list.filter(
       (log) =>
@@ -63,10 +56,9 @@ const EventIndex = () => {
         throw new Error(result.message);
       }
 
-      const sortedEvent = sort(result);
-      setEventLog(sortedEvent);
+      setEventLog(result);
 
-      const filteredEvents = filter(sortedEvent);
+      const filteredEvents = filter(result);
       setFilteredLogs(filteredEvents);
     } catch (err: any) {
       console.log(err);
@@ -104,10 +96,9 @@ const EventIndex = () => {
 
   useEffect(() => {
     if (eventLog) {
-      const sortedEvent = sort(eventLog);
-      setEventLog(sortedEvent);
+      setEventLog(eventLog);
 
-      const filteredEvents = filter(sortedEvent);
+      const filteredEvents = filter(eventLog);
       setFilteredLogs(filteredEvents);
     }
   }, [eventLog, searchTerm]);
@@ -254,7 +245,10 @@ const EventIndex = () => {
 
       {showModal && (
         <EventModal
-          onClose={() => setShowModal(false)}
+          onClose={() => {
+            setShowModal(false)
+            
+          }}
           onSubmit={() => {
             setShowModal(false);
             fetchEvents();

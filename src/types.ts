@@ -22,7 +22,8 @@ export interface Asset {
   image_url: string;
   primary_user: string;
   notes: string;
-  complementary?: Complementary;
+  complementary_items?: ComplementaryItem[];
+  component_items?: ComponentItem[];
 }
 
 export interface Complementary {
@@ -66,8 +67,6 @@ export interface Component {
   active_date: Date;
 
   expected_lifespan: number;
-  // depreciation_method: string;
-  // depreciation_rate: number;
   notes: string;
 }
 
@@ -137,4 +136,52 @@ export interface Event {
     corrective_action: string;
     notes: string;
   };
+}
+
+export interface ComplementaryItem {
+  complementary_id: string;
+  relation: string;
+  name: string;
+  brand: string;
+  model: string;
+  category: string;
+  sub_category: string;
+  archive: Archive[];
+  notes: string;
+}
+
+export interface Archive {
+  status: string;
+  warranty: string;
+  active_date: string;
+  part_number: string;
+  purchase_date: string;
+  serial_number: string;
+  purchase_price: number;
+  supplier_vendor: string;
+  purchase_order_number: string;
+  notes: string;
+}
+
+export interface ComponentItem {
+  component_id: string;
+  relation: string;
+  name: string;
+  brand: string;
+  model: string;
+  archive: Archive2[];
+  notes: string;
+}
+
+export interface Archive2 {
+  status: string;
+  warranty: string;
+  active_date: string;
+  part_number: string;
+  purchase_date: string;
+  serial_number: string;
+  purchase_price: number;
+  supplier_vendor: string;
+  purchase_order_number: string;
+  notes: string;
 }

@@ -45,6 +45,8 @@ const EventModal = ({
     repair_notes: "",
   });
 
+  const [isSaving, setIsSaving] = useState(false);
+
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
@@ -56,6 +58,7 @@ const EventModal = ({
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setIsSaving(true);
     let typeCode;
     let eventPrefix;
     switch (eventType) {
@@ -135,9 +138,11 @@ const EventModal = ({
         onClose();
       } else {
         console.error("Failed to submit event");
+        setIsSaving(false);
       }
     } catch (error) {
       console.error("Error submitting event:", error);
+      setIsSaving(false);
     }
   };
 
@@ -506,8 +511,9 @@ const EventModal = ({
               form="event-form"
               className="px-4 py-2 bg-amber-600 text-black border-2 border-amber-500 rounded hover:bg-amber-500 font-bold"
               onClick={handleSubmit}
+              disabled={isSaving}
             >
-              SAVE EVENT
+              {isSaving ? "SAVING..." : "SAVE EVENT"}
             </button>
           </div>
         </div>

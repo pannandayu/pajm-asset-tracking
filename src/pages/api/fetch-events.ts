@@ -6,9 +6,9 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const data = await query("SELECT * FROM asset.events");
-
-    
+    const data = await query(
+      "SELECT * FROM asset.events ORDER BY event_date DESC;"
+    );
 
     return res.status(200).json(data);
   } catch (error) {

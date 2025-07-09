@@ -1,3 +1,5 @@
+import GenerateChecklistPage from "@/components/GenerateChecklist";
+import BendingMachineChecklistPDF from "@/components/TesMaintenance";
 import { useAuth } from "@/context/AuthContext";
 import { NextPage } from "next";
 import Head from "next/head";
@@ -63,14 +65,11 @@ const Home: NextPage = () => {
           </h1>
           <p className="text-amber-400 text-sm mt-1">SECURED ACCESS SYSTEM</p>
         </div>
-
-        {/* Error Display */}
         {error && (
           <div className="bg-red-900 text-red-200 border-2 border-red-500 p-3 mb-4 text-sm">
             SYSTEM ALERT: {error}
           </div>
         )}
-
         {/* Content Area */}
         <div className="bg-gray-800 border-2 border-amber-400 p-6 shadow-lg shadow-amber-400/10">
           {auth.user && auth.user.id ? (
@@ -192,7 +191,6 @@ const Home: NextPage = () => {
             </Fragment>
           )}
         </div>
-
         {/* Terminal Footer */}
         <div className="bg-gray-800 border-2 border-amber-400 p-2 mt-4 text-center text-xs text-amber-400">
           PAJM SHIPYARD • TERMINAL
