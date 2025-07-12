@@ -1,8 +1,11 @@
+import ArchiveUpdateForm from "@/components/ArchiveUpdateForm";
 import AssetPrintView from "@/components/AssetPrintView";
 import DataRow from "@/components/DataRow";
+import { AssetPdfDocument } from "@/components/GeneratePdf";
 import { useAuth } from "@/context/AuthContext";
 import { assetAtom } from "@/context/jotai";
-import { Asset, ComplementaryItem, ComponentItem } from "@/types";
+import { Asset } from "@/types";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
 import Image from "next/image";
@@ -29,6 +32,10 @@ const AssetDetail = () => {
   const [selectedAsset, setSelectedAsset] = useState<Asset>();
   const [showComplementary, setShowComplementary] = useState(true);
   const [showComponents, setShowComponents] = useState(true);
+  const [showComplementaryArchiveForm, setShowComplementaryArchiveForm] =
+    useState(false);
+  const [showComponentArchiveForm, setShowComponentArchiveForm] =
+    useState(false);
 
   const { id: assetId } = router.query;
 
@@ -72,20 +79,36 @@ const AssetDetail = () => {
     return purcPrice - deprValue;
   };
 
-  const groupByPurchaseOrder = <T extends { archive: any[] }>(items: T[]) => {
-    const grouped: Record<string, T[]> = {};
+  const handleUpdateArchive = async (
+    id: string,
+    updatedArchive: any,
+    itemType: string
+  ) => {
+    if (!selectedAsset) return;
 
-    items.forEach((item) => {
-      item.archive?.forEach((archive) => {
-        const poNumber = archive.purchase_order_number || "UNKNOWN_PO";
-        if (!grouped[poNumber]) {
-          grouped[poNumber] = [];
-        }
-        grouped[poNumber].push(item);
+    try {
+      const response = await fetch("/api/update-archive", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id,
+          archive: updatedArchive,
+          type: itemType,
+        }),
       });
-    });
 
-    return grouped;
+      if (response.ok) {
+        if (itemType === "complementary") {
+          setShowComplementaryArchiveForm(false);
+        } else {
+          setShowComponentArchiveForm(false);
+        }
+      } else {
+        console.error("Failed to update archive");
+      }
+    } catch (error) {
+      console.error("Error updating archive:", error);
+    }
   };
 
   const renderPurchaseHistory = (archive: any[]) => {
@@ -134,10 +157,7 @@ const AssetDetail = () => {
                       label="Part Number"
                       data={item.part_number || "-"}
                     />
-                    <DataRow
-                      label="Notes"
-                      data={item.notes || "-"}
-                    />
+                    <DataRow label="Notes" data={item.notes || "-"} />
                   </div>
                 ))}
               </div>
@@ -150,7 +170,7 @@ const AssetDetail = () => {
 
   const renderComplementaryItems = () => {
     if (!selectedAsset?.complementary_items?.length) {
-      return <p className="text-amber-300">No complementary items</p>;
+      return <p className="text-amber-300">No complementary assets</p>;
     }
 
     return (
@@ -163,10 +183,33 @@ const AssetDetail = () => {
             <DataRow label="Model" data={item.model || "-"} />
             <DataRow label="Notes" data={item.notes || "-"} />
 
-            <div className="mt-4">
-              <h4 className="font-bold mb-2">Purchase History:</h4>
-              {renderPurchaseHistory(item.archive)}
-            </div>
+            {auth.user && auth.user.tagging === "0" && (
+              <div className="flex flex-col mt-4">
+                <h4 className="font-bold mb-2">Purchase History:</h4>
+                {renderPurchaseHistory(item.archive)}
+                <button
+                  className="border-1 rounded-sm mt-6 py-2 hover:bg-gray-700 cursor-pointer"
+                  onClick={() => setShowComplementaryArchiveForm(true)}
+                >
+                  Add Archive
+                </button>
+                {showComplementaryArchiveForm && (
+                  <ArchiveUpdateForm
+                    itemId={item.complementary_id}
+                    itemType={"complementary"}
+                    currentArchive={item.archive}
+                    onClose={() => setShowComplementaryArchiveForm(false)}
+                    onUpdate={(archive) =>
+                      handleUpdateArchive(
+                        item.complementary_id,
+                        archive,
+                        "complementary"
+                      )
+                    }
+                  />
+                )}
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -177,21 +220,46 @@ const AssetDetail = () => {
     if (!selectedAsset?.component_items?.length) {
       return <p className="text-amber-300">No component items</p>;
     }
-
     return (
       <div className="space-y-6">
         {selectedAsset.component_items.map((item, index) => (
-          <div key={index} className="border-b border-amber-400 pb-6">
+          <div
+            key={index}
+            className="border-1 p-6 rounded-md border-white pt-4"
+          >
             <DataRow label="Component ID" data={item.component_id} />
             <DataRow label="Name" data={item.name} />
             <DataRow label="Brand" data={item.brand} />
-            <DataRow label="Model" data={item.model} />
+            <DataRow label="Model" data={item.model || "-"} />
             <DataRow label="Notes" data={item.notes || "-"} />
 
-            <div className="mt-4">
-              <h4 className="font-bold mb-2">Purchase History:</h4>
-              {renderPurchaseHistory(item.archive)}
-            </div>
+            {auth.user && auth.user.tagging === "0" && (
+              <div className="flex flex-col mt-4">
+                <h4 className="font-bold mb-2">Purchase History:</h4>
+                {renderPurchaseHistory(item.archive)}
+                <button
+                  className="border-1 rounded-sm mt-6 py-2 hover:bg-gray-700 cursor-pointer"
+                  onClick={() => setShowComponentArchiveForm(true)}
+                >
+                  Add Archive
+                </button>
+                {showComponentArchiveForm && (
+                  <ArchiveUpdateForm
+                    itemId={item.component_id}
+                    itemType={"component"}
+                    currentArchive={item.archive}
+                    onClose={() => setShowComponentArchiveForm(false)}
+                    onUpdate={(archive) =>
+                      handleUpdateArchive(
+                        item.component_id,
+                        archive,
+                        "component"
+                      )
+                    }
+                  />
+                )}
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -243,7 +311,7 @@ const AssetDetail = () => {
                   data={selectedAsset.part_number || "-"}
                 />
                 <DataRow
-                  label="Owner Dept."
+                  label="Ownership (Dept.)"
                   data={selectedAsset.department_owner}
                 />
                 <DataRow
@@ -280,7 +348,7 @@ const AssetDetail = () => {
               />
               <DataRow
                 label="Expected Lifespan"
-                data={selectedAsset.expected_lifespan}
+                data={selectedAsset.expected_lifespan + " years"}
               />
               <DataRow
                 label="Depreciation Method"
@@ -314,7 +382,7 @@ const AssetDetail = () => {
 
           <div className="mb-8">
             <div className="flex justify-between items-center mb-2">
-              <h2 className="text-2xl font-bold border-b border-amber-400 pb-2">
+              <h2 className="text-2xl font-bold border-b border-amber-400 pb-2 mb-2">
                 COMPONENT ITEMS
               </h2>
               <button
@@ -334,9 +402,27 @@ const AssetDetail = () => {
             >
               ← BACK
             </button>
-            {auth.user.tagging === "0" && (
+            {/* {auth.user.tagging === "0" && (
               <AssetPrintView asset={selectedAsset} />
-            )}
+            )} */}
+
+            <PDFDownloadLink
+              document={
+                <AssetPdfDocument
+                  asset={selectedAsset}
+                  assetImageUrl={selectedAsset.image_url}
+                  tagging={auth.user.tagging}
+                />
+              }
+              fileName={`${selectedAsset.id}_${
+                selectedAsset.name
+              }_${dayjs().format("DDMMYY")}_Data.pdf`}
+              className="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-black border-2 border-amber-500 font-bold transition-all"
+            >
+              {({ loading }) =>
+                loading ? "Preparing document..." : "Download PDF"
+              }
+            </PDFDownloadLink>
           </div>
         </div>
       )}

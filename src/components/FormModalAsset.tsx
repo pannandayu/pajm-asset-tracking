@@ -88,7 +88,7 @@ const AssetModal = ({
   // Handle component changes
   const handleComponentChange = (
     index: number,
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     const updated = [...components];
@@ -288,6 +288,32 @@ const AssetModal = ({
                   </div>
                   <div>
                     <label className="block text-sm mb-1 font-bold">
+                      BRAND:
+                    </label>
+                    <input
+                      type="text"
+                      name="brand"
+                      value={formData.brand}
+                      onChange={handleChange}
+                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm mb-1 font-bold">
+                      MODEL:
+                    </label>
+                    <input
+                      type="text"
+                      name="model"
+                      value={formData.model}
+                      onChange={handleChange}
+                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm mb-1 font-bold">
                       CATEGORY:
                     </label>
                     <input
@@ -335,6 +361,32 @@ const AssetModal = ({
                       type="date"
                       name="purchase_date"
                       value={dayjs(formData.purchase_date).format("YYYY-MM-DD")}
+                      onChange={handleChange}
+                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm mb-1 font-bold">
+                      Ownership (Dept.)
+                    </label>
+                    <input
+                      type="text"
+                      name="department_owner"
+                      value={formData.department_owner}
+                      onChange={handleChange}
+                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm mb-1 font-bold">
+                      PRIMARY USER
+                    </label>
+                    <input
+                      type="text"
+                      name="primary_user"
+                      value={formData.primary_user}
                       onChange={handleChange}
                       className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
                       required
@@ -432,6 +484,7 @@ const AssetModal = ({
                       className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
                       required
                     >
+                      <option value="">Select Status</option>
                       <option value="Active">Active</option>
                       <option value="Inactive">Inactive</option>
                     </select>
@@ -547,6 +600,7 @@ const AssetModal = ({
                           value={asset.brand}
                           onChange={(e) => handleComplementaryChange(index, e)}
                           className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          required
                         />
                       </div>
                       <div>
@@ -571,6 +625,7 @@ const AssetModal = ({
                           value={asset.category}
                           onChange={(e) => handleComplementaryChange(index, e)}
                           className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          required
                         />
                       </div>
                       <div>
@@ -583,6 +638,7 @@ const AssetModal = ({
                           value={asset.sub_category}
                           onChange={(e) => handleComplementaryChange(index, e)}
                           className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          required
                         />
                       </div>
                       <div>
@@ -595,6 +651,7 @@ const AssetModal = ({
                           value={asset.department_owner}
                           onChange={(e) => handleComplementaryChange(index, e)}
                           className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          required
                         />
                       </div>
                       <div>
@@ -631,6 +688,7 @@ const AssetModal = ({
                           value={asset.supplier_vendor}
                           onChange={(e) => handleComplementaryChange(index, e)}
                           className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          required
                         />
                       </div>
                       <div>
@@ -668,7 +726,7 @@ const AssetModal = ({
                           value={dayjs(asset.purchase_date).format(
                             "YYYY-MM-DD"
                           )}
-                          onChange={handleChange}
+                          onChange={(e) => handleComplementaryChange(index, e)}
                           className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
                         />
                       </div>
@@ -680,7 +738,7 @@ const AssetModal = ({
                           type="date"
                           name="active_date"
                           value={dayjs(asset.active_date).format("YYYY-MM-DD")}
-                          onChange={handleChange}
+                          onChange={(e) => handleComplementaryChange(index, e)}
                           className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
                         />
                       </div>
@@ -691,10 +749,11 @@ const AssetModal = ({
                         <select
                           name="status"
                           value={asset.status}
-                          onChange={handleChange}
+                          onChange={(e) => handleComplementaryChange(index, e)}
                           className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
                           required
                         >
+                          <option value="">Select Status</option>
                           <option value="Active">Active</option>
                           <option value="Inactive">Inactive</option>
                         </select>
@@ -730,7 +789,7 @@ const AssetModal = ({
                         <select
                           name="depreciation_method"
                           value={asset.depreciation_method}
-                          onChange={handleChange}
+                          onChange={(e) => handleComplementaryChange(index, e)}
                           className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
                         >
                           <option value="">Select Method</option>
@@ -748,7 +807,7 @@ const AssetModal = ({
                           type="number"
                           name="depreciation_rate"
                           value={asset.depreciation_rate}
-                          onChange={handleChange}
+                          onChange={(e) => handleComplementaryChange(index, e)}
                           className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
                         />
                       </div>
@@ -824,6 +883,31 @@ const AssetModal = ({
                           required
                         />
                       </div>
+                      <div>
+                        <label className="block text-sm mb-1 font-bold">
+                          BRAND:
+                        </label>
+                        <input
+                          type="text"
+                          name="brand"
+                          value={component.brand}
+                          onChange={(e) => handleComponentChange(index, e)}
+                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm mb-1 font-bold">
+                          MODEL:
+                        </label>
+                        <input
+                          type="text"
+                          name="model"
+                          value={component.model}
+                          onChange={(e) => handleComponentChange(index, e)}
+                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                        />
+                      </div>
                       {/* <div>
                         <label className="block text-sm mb-1 font-bold">
                           CATEGORY:
@@ -859,7 +943,7 @@ const AssetModal = ({
                           type="text"
                           name="serial_number"
                           value={component.serial_number}
-                          onChange={(e) => handleComplementaryChange(index, e)}
+                          onChange={(e) => handleComponentChange(index, e)}
                           className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
                         />
                       </div>
@@ -871,7 +955,7 @@ const AssetModal = ({
                           type="text"
                           name="part_number"
                           value={component.part_number}
-                          onChange={(e) => handleComplementaryChange(index, e)}
+                          onChange={(e) => handleComponentChange(index, e)}
                           className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
                         />
                       </div>
@@ -883,7 +967,7 @@ const AssetModal = ({
                           type="text"
                           name="supplier_vendor"
                           value={component.supplier_vendor}
-                          onChange={(e) => handleComplementaryChange(index, e)}
+                          onChange={(e) => handleComponentChange(index, e)}
                           className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
                         />
                       </div>
@@ -895,7 +979,7 @@ const AssetModal = ({
                           type="number"
                           name="purchase_price"
                           value={component.purchase_price}
-                          onChange={(e) => handleComplementaryChange(index, e)}
+                          onChange={(e) => handleComponentChange(index, e)}
                           className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
                         />
                       </div>
@@ -907,7 +991,7 @@ const AssetModal = ({
                           type="text"
                           name="purchase_order_number"
                           value={component.purchase_order_number}
-                          onChange={(e) => handleComplementaryChange(index, e)}
+                          onChange={(e) => handleComponentChange(index, e)}
                           className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
                         />
                       </div>
@@ -922,7 +1006,7 @@ const AssetModal = ({
                           value={dayjs(component.purchase_date).format(
                             "YYYY-MM-DD"
                           )}
-                          onChange={handleChange}
+                          onChange={(e) => handleComponentChange(index, e)}
                           className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
                         />
                       </div>
@@ -936,7 +1020,7 @@ const AssetModal = ({
                           value={dayjs(component.active_date).format(
                             "YYYY-MM-DD"
                           )}
-                          onChange={handleChange}
+                          onChange={(e) => handleComponentChange(index, e)}
                           className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
                         />
                       </div>
@@ -947,10 +1031,11 @@ const AssetModal = ({
                         <select
                           name="status"
                           value={component.status}
-                          onChange={handleChange}
+                          onChange={(e) => handleComponentChange(index, e)}
                           className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
                           required
                         >
+                          <option value="">Select Status</option>
                           <option value="Active">Active</option>
                           <option value="Inactive">Inactive</option>
                         </select>
@@ -963,7 +1048,7 @@ const AssetModal = ({
                           type="text"
                           name="warranty"
                           value={component.warranty}
-                          onChange={(e) => handleComplementaryChange(index, e)}
+                          onChange={(e) => handleComponentChange(index, e)}
                           className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
                         />
                       </div>
@@ -988,7 +1073,7 @@ const AssetModal = ({
                       <textarea
                         name="notes"
                         value={component.notes}
-                        onChange={(e) => handleComplementaryChange(index, e)}
+                        onChange={(e) => handleComponentChange(index, e)}
                         className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
                         rows={2}
                       />

@@ -97,39 +97,41 @@ const CatalogPage: NextPage = () => {
 
                   {/* Asset List */}
                   <ul className="space-y-2">
-                    {grouped[letter].map((asset) => (
-                      <li
-                        key={asset.id}
-                        className="bg-gray-700 hover:bg-gray-600 border border-amber-400 p-3 cursor-pointer transition-all group"
-                        onClick={() =>
-                          router.push(
-                            `${router.basePath}/catalog/detail?id=${asset.id}`
-                          )
-                        }
-                      >
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                          <span className="font-bold text-amber-300 group-hover:text-amber-200">
-                            {asset.name}
-                          </span>
-                          <div className="flex items-center gap-4 mt-1 sm:mt-0">
-                            <span
-                              className={`text-xs px-2 py-1 rounded-sm ${
-                                asset.status === "Active"
-                                  ? "bg-black text-amber-200"
-                                  : asset.status === "Inactive"
-                                  ? "bg-yellow-800 text-yellow-200"
-                                  : "bg-red-800 text-red-200"
-                              }`}
-                            >
-                              {asset.status.toUpperCase()}
+                    {grouped[letter]
+                      .sort((a, b) => a.id.localeCompare(b.id))
+                      .map((asset) => (
+                        <li
+                          key={asset.id}
+                          className="bg-gray-700 hover:bg-gray-600 border border-amber-400 p-3 cursor-pointer transition-all group"
+                          onClick={() =>
+                            router.push(
+                              `${router.basePath}/catalog/detail?id=${asset.id}`
+                            )
+                          }
+                        >
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                            <span className="font-bold text-amber-300 group-hover:text-amber-200">
+                              {asset.name}
                             </span>
-                            <span className="text-xs opacity-70">
-                              ID: {asset.id}
-                            </span>
+                            <div className="flex items-center gap-4 mt-1 sm:mt-0">
+                              <span
+                                className={`text-xs px-2 py-1 rounded-sm ${
+                                  asset.status === "Active"
+                                    ? "bg-black text-amber-200"
+                                    : asset.status === "Inactive"
+                                    ? "bg-yellow-800 text-yellow-200"
+                                    : "bg-red-800 text-red-200"
+                                }`}
+                              >
+                                {asset.status.toUpperCase()}
+                              </span>
+                              <span className="text-xs opacity-70">
+                                ID: {asset.id}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      </li>
-                    ))}
+                        </li>
+                      ))}
                   </ul>
                 </div>
               ))

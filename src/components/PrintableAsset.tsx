@@ -1,8 +1,9 @@
 import { formatCurrency } from "@/pages/catalog/detail";
-import { Asset } from "@/types";
+import { Asset, ComplementaryItem, ComponentItem } from "@/types";
 import dayjs from "dayjs";
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { PDFDocument, RGB, StandardFonts, rgb } from "pdf-lib";
 import "dayjs/locale/id";
+
 
 interface PrintableAssetProps {
   asset: Asset;
@@ -17,6 +18,122 @@ const PrintableAsset = ({
   assetImageUrl,
   companyLogoUrl,
 }: PrintableAssetProps) => {
+  // Format archive records for display
+  const formatArchiveRecords = (archive: any[]) => {
+    return archive.map((record, index) => (
+      <div key={index} className="mb-4 pl-4 border-l-2 border-amber-400">
+        <h4 className="font-bold">Record #{index + 1}</h4>
+        <div className="grid grid-cols-2 gap-2 text-sm">
+          <div>
+            <span className="font-semibold">Status:</span> {record.status}
+          </div>
+          <div>
+            <span className="font-semibold">Warranty:</span> {record.warranty}
+          </div>
+          <div>
+            <span className="font-semibold">Active Date:</span>{" "}
+            {dayjs(record.active_date).format("DD MMMM YYYY")}
+          </div>
+          <div>
+            <span className="font-semibold">Purchase Date:</span>{" "}
+            {dayjs(record.purchase_date).format("DD MMMM YYYY")}
+          </div>
+          <div>
+            <span className="font-semibold">Serial Number:</span>{" "}
+            {record.serial_number}
+          </div>
+          <div>
+            <span className="font-semibold">Part Number:</span>{" "}
+            {record.part_number}
+          </div>
+          <div>
+            <span className="font-semibold">Purchase Price:</span>{" "}
+            {formatCurrency(record.purchase_price)}
+          </div>
+          <div>
+            <span className="font-semibold">Vendor:</span>{" "}
+            {record.supplier_vendor}
+          </div>
+          <div>
+            <span className="font-semibold">PO Number:</span>{" "}
+            {record.purchase_order_number}
+          </div>
+          <div className="col-span-2">
+            <span className="font-semibold">Notes:</span> {record.notes}
+          </div>
+        </div>
+      </div>
+    ));
+  };
+
+  // Format components for display
+  const formatComponents = (components: ComponentItem[]) => {
+    return components.map((component, index) => (
+      <div key={index} className="mb-4 pl-4 border-l-2 border-amber-400">
+        <h4 className="font-bold">{component.name}</h4>
+        <div className="grid grid-cols-2 gap-2 text-sm">
+          <div>
+            <span className="font-semibold">Brand:</span> {component.brand}
+          </div>
+          <div>
+            <span className="font-semibold">Model:</span> {component.model}
+          </div>
+          <div>
+            <span className="font-semibold">Relation:</span>{" "}
+            {component.relation}
+          </div>
+          <div>
+            <span className="font-semibold">Status:</span>{" "}
+            {component.archive?.[0]?.status || "N/A"}
+          </div>
+          {component.archive && component.archive.length > 0 && (
+            <div className="col-span-2">
+              <h5 className="font-semibold mt-2">Archive Records:</h5>
+              {formatArchiveRecords(component.archive)}
+            </div>
+          )}
+        </div>
+      </div>
+    ));
+  };
+
+  // Format complementary items for display
+  const formatComplementaryItems = (items: ComplementaryItem[]) => {
+    return items.map((item, index) => (
+      <div key={index} className="mb-4 pl-4 border-l-2 border-amber-400">
+        <h4 className="font-bold">{item.name}</h4>
+        <div className="grid grid-cols-2 gap-2 text-sm">
+          <div>
+            <span className="font-semibold">Brand:</span> {item.brand}
+          </div>
+          <div>
+            <span className="font-semibold">Model:</span> {item.model}
+          </div>
+          <div>
+            <span className="font-semibold">Category:</span> {item.category}
+          </div>
+          <div>
+            <span className="font-semibold">Sub-Category:</span>{" "}
+            {item.sub_category}
+          </div>
+          <div>
+            <span className="font-semibold">Relation:</span> {item.relation}
+          </div>
+          <div>
+            <span className="font-semibold">Status:</span>{" "}
+            {item.archive?.[0]?.status || "N/A"}
+          </div>
+          {item.archive && item.archive.length > 0 && (
+            <div className="col-span-2">
+              <h5 className="font-semibold mt-2">Archive Records:</h5>
+              {formatArchiveRecords(item.archive)}
+            </div>
+          )}
+        </div>
+      </div>
+    ));
+  };
+
   const technicalFields = [
     { label: "Asset ID", value: asset.id },
     { label: "Asset Name", value: asset.name },
@@ -26,12 +143,12 @@ const PrintableAsset = ({
     { label: "Sub-Category", value: asset.sub_category },
     { label: "Serial Number", value: asset.serial_number || "-" },
     { label: "Part Number", value: asset.part_number || "-" },
-    { label: "Owner Dept.", value: asset.department_owner },
+    { label: "Ownership (Dept.)", value: asset.department_owner },
     { label: "Primary User", value: asset.primary_user },
     {
       label: "First Usage/Installation Date",
       value: asset.active_date
-        ? dayjs(asset.active_date).locale("id").format("DD MMMM YYYY")
+        ? dayjs(asset.active_date).format("DD MMMM YYYY")
         : "-",
     },
     { label: "Status", value: asset.status },
@@ -41,171 +158,30 @@ const PrintableAsset = ({
     {
       label: "Purchase Date",
       value: asset.purchase_date
-        ? dayjs(asset.active_date).locale("id").format("DD MMMM YYYY")
+        ? dayjs(asset.purchase_date).format("DD MMMM YYYY")
         : "-",
     },
-    { label: "Purchase Order Number", value: asset.purchase_order_number },
-    { label: "Vendor", value: asset.vendor_supplier },
-    { label: "Warranty", value: asset.warranty },
+    {
+      label: "Purchase Order Number",
+      value: asset.purchase_order_number || "-",
+    },
+    { label: "Vendor", value: asset.vendor_supplier || "-" },
+    { label: "Warranty", value: asset.warranty || "-" },
     { label: "Purchase Price", value: formatCurrency(asset.purchase_price) },
     {
       label: "Expected Lifespan",
-      value: `${asset.expected_lifespan} tahun`,
+      value: `${asset.expected_lifespan || 0} years`,
     },
-    { label: "Depreciation Method", value: asset.depreciation_method },
+    { label: "Depreciation Method", value: asset.depreciation_method || "-" },
     {
       label: "Annual Depreciation Rate",
-      value: `${asset.depreciation_rate}%`,
+      value: `${asset.depreciation_rate || 0}%`,
     },
     {
       label: "Current Book Value",
       value: formatCurrency(asset.current_book_value),
     },
   ];
-
-  const generatePdf = async () => {
-    try {
-      const pdfDoc = await PDFDocument.create();
-      const page = pdfDoc.addPage([595, 842]); // A4 size
-
-      // Improved image loading with format detection
-      const loadImage = async (url: string) => {
-        try {
-          const response = await fetch(url);
-          if (!response.ok) throw new Error(`HTTP ${response.status}`);
-          const bytes = await response.arrayBuffer();
-
-          // Detect image type from URL or Content-Type
-          const contentType = response.headers.get("content-type");
-          const isJpeg =
-            url.toLowerCase().endsWith(".jpg") ||
-            url.toLowerCase().endsWith(".jpeg") ||
-            contentType?.includes("jpeg");
-          const isPng =
-            url.toLowerCase().endsWith(".png") || contentType?.includes("png");
-
-          if (isPng) {
-            return await pdfDoc.embedPng(bytes);
-          } else if (isJpeg) {
-            return await pdfDoc.embedJpg(bytes);
-          } else {
-            console.warn("Unknown image type, trying PNG then JPEG");
-            try {
-              return await pdfDoc.embedPng(bytes);
-            } catch {
-              return await pdfDoc.embedJpg(bytes);
-            }
-          }
-        } catch (e) {
-          console.warn(`Failed to load image ${url}:`, e);
-          return null;
-        }
-      };
-
-      const [assetImage, companyLogo] = await Promise.all([
-        loadImage(assetImageUrl),
-        loadImage(companyLogoUrl),
-      ]);
-
-      if (assetImage) {
-        page.drawImage(assetImage, {
-          x: 50,
-          y: 623,
-          width: 140,
-          height: 140,
-        });
-      }
-
-      const font = await pdfDoc.embedFont(StandardFonts.Courier);
-      const boldFont = await pdfDoc.embedFont(StandardFonts.CourierBold);
-
-      const drawText = (
-        text: string,
-        x: number,
-        y: number,
-        size = 12,
-        isBold = false,
-        color = rgb(0, 0, 0)
-      ) => {
-        page.drawText(text, {
-          x,
-          y,
-          size,
-          font: isBold ? boldFont : font,
-          color,
-        });
-      };
-
-      // Header
-      drawText("ASSET DETAILS", 50, 800, 20, true);
-      drawText(
-        `Document generated on: ${dayjs().format("DD MMMM YYYY HH:mm")}`,
-        50,
-        775,
-        10
-      );
-
-      // Technical Information (positioned after images)
-      drawText("INFORMASI TEKNIS", 50, 600, 16, true, rgb(0.2, 0.4, 0.6));
-      let yPosition = 570;
-
-      technicalFields.forEach((field) => {
-        drawText(`${field.label}:`, 50, yPosition, 12, true);
-        drawText(field.value.toString(), 300, yPosition);
-        yPosition -= 20;
-      });
-
-      // Financial Information
-      yPosition -= 20;
-      drawText(
-        "INFORMASI FINANSIAL",
-        50,
-        yPosition,
-        16,
-        true,
-        rgb(0.2, 0.4, 0.6)
-      );
-      yPosition -= 25;
-
-      financialFields.forEach((field) => {
-        drawText(`${field.label}:`, 50, yPosition, 12, true);
-        drawText(field.value.toString(), 300, yPosition);
-        yPosition -= 20;
-      });
-
-      const dragonIconBytes = await fetch("/dragon.png").then((res) =>
-        res.arrayBuffer()
-      );
-      const dragonImage = await pdfDoc.embedPng(dragonIconBytes);
-      page.drawImage(dragonImage, {
-        x: page.getWidth() - 40,
-        y: 20,
-        width: 20,
-        height: 20,
-        opacity: 0.3,
-      });
-
-      const pdfBytes = await pdfDoc.save();
-      // @ts-ignore
-      const blob = new Blob([pdfBytes], { type: "application/pdf" });
-      const url = URL.createObjectURL(blob);
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `Asset_${asset.id}_${dayjs()
-        .locale("id")
-        .format("DDMMYYYY")}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-
-      setTimeout(() => {
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-      }, 100);
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-    }
-  };
 
   return (
     <div className="p-6 bg-gray-800 border-2 border-amber-400 rounded-lg shadow-lg max-w-4xl mx-auto font-mono text-amber-300">
@@ -227,9 +203,8 @@ const PrintableAsset = ({
             />
           </div>
           <h2 className="text-xl font-bold mb-4 pb-2 border-b border-amber-400">
-            Technical
+            Technical Information
           </h2>
-          {/* todo -- ganti bahasa indonesia */}
           <div className="space-y-3">
             {technicalFields.map((field) => (
               <div
@@ -245,7 +220,7 @@ const PrintableAsset = ({
 
         <div>
           <h2 className="text-xl font-bold mb-4 pb-2 border-b border-amber-400">
-            Informasi Finansial
+            Financial Information
           </h2>
           <div className="space-y-3">
             {financialFields.map((field) => (
@@ -259,6 +234,30 @@ const PrintableAsset = ({
             ))}
           </div>
         </div>
+
+        {/* Components Section */}
+        {asset.component_items && asset.component_items.length > 0 && (
+          <div>
+            <h2 className="text-xl font-bold mb-4 pb-2 border-b border-amber-400">
+              Components ({asset.component_items.length})
+            </h2>
+            <div className="space-y-4">
+              {formatComponents(asset.component_items)}
+            </div>
+          </div>
+        )}
+
+        {/* Complementary Items Section */}
+        {asset.complementary_items && asset.complementary_items.length > 0 && (
+          <div>
+            <h2 className="text-xl font-bold mb-4 pb-2 border-b border-amber-400">
+              Complementary Assets ({asset.complementary_items.length})
+            </h2>
+            <div className="space-y-4">
+              {formatComplementaryItems(asset.complementary_items)}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="my-8 text-sm text-amber-400">
@@ -266,12 +265,12 @@ const PrintableAsset = ({
       </div>
 
       <div className="flex gap-2">
-        <button
+        {/* <button
           onClick={generatePdf}
           className="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-black border-2 border-amber-500 font-bold transition-all"
         >
           Download PDF
-        </button>
+        </button> */}
         {onClose && (
           <button
             onClick={onClose}
