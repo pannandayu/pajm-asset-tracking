@@ -17,8 +17,6 @@ const EventDetail = () => {
 
   const { id: eventId } = router.query;
 
-  console.log(eventId);
-
   const handleBack = () => {
     router.push("/events");
   };
@@ -58,8 +56,6 @@ const EventDetail = () => {
       fetchEvent();
     }
   }, [auth.loading, auth.user, eventId]);
-
-  console.log("event", event);
 
   const renderLocationDetails = () => (
     <div className="space-y-3">

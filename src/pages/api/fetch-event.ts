@@ -10,7 +10,6 @@ export default async function handler(
   }
 
   const { eventId } = req.body;
-  console.log(eventId);
 
   if (!eventId) {
     throw new Error("Event id error");
@@ -43,8 +42,6 @@ export default async function handler(
     );
     const specificEvent = await query(specificQuery, [eventId]);
 
-    console.log("se", specificEvent);
-
     let specificData;
 
     switch (eventCode) {
@@ -61,7 +58,6 @@ export default async function handler(
 
     const data = { ...generalEvent[0], ...specificData };
 
-    console.log("data", data);
     return res.status(200).json(data);
   } catch (error) {
     console.error("Login error:", error);

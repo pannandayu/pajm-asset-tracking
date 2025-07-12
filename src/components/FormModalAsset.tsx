@@ -170,11 +170,11 @@ const AssetModal = ({
 
     setIsSaving(null);
 
-    console.log({
-      mainAsset: formData,
-      complementaryAssets,
-      components,
-    });
+    // console.log({
+    //   mainAsset: formData,
+    //   complementaryAssets,
+    //   components,
+    // });
 
     try {
       const response = await fetch("/api/post-asset", {
