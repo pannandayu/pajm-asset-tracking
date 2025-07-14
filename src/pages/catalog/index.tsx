@@ -6,6 +6,8 @@ import { Asset } from "@/types";
 import { useAtom } from "jotai";
 import { assetAtom } from "@/context/jotai";
 import AssetModal from "@/components/FormModalAsset";
+import { MdViewModule } from "react-icons/md";
+import { CiDatabase } from "react-icons/ci";
 
 export const groupAsset = (data: Asset[]) => {
   return data.reduce((acc, asset) => {
@@ -57,10 +59,13 @@ const CatalogPage: NextPage = () => {
         <Fragment>
           {/* Terminal Header */}
           <div className="bg-gray-800 border-2 border-amber-400 p-4 mb-6 shadow-lg shadow-amber-400/20">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
-              <h1 className="text-2xl font-bold tracking-wider text-left">
-                CATALOG MODULE
-              </h1>
+            <div className="flex flex-col gap-2 sm:flex-row justify-between items-start sm:items-center mb-4">
+              <div className="flex align-middle gap-2">
+                <MdViewModule className="text-3xl" />
+                <h1 className="text-2xl font-bold tracking-wider text-left">
+                  CATALOG MODULE
+                </h1>
+              </div>
               <button
                 className="bg-gray-700 hover:bg-gray-600 text-amber-300 border-2 border-amber-400 px-3 py-1 font-bold transition-all"
                 onClick={() => router.push("/")}

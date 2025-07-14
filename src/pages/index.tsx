@@ -1,10 +1,10 @@
-import GenerateChecklistPage from "@/components/GenerateChecklist";
-import BendingMachineChecklistPDF from "@/components/TesMaintenance";
 import { useAuth } from "@/context/AuthContext";
 import { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { FormEvent, Fragment, useEffect, useState } from "react";
+import { FormEvent, Fragment, useState } from "react";
+import { LuList } from "react-icons/lu";
+import { TfiCalendar } from "react-icons/tfi";
 
 const Home: NextPage = () => {
   const auth = useAuth();
@@ -87,7 +87,7 @@ const Home: NextPage = () => {
                 <Link href="/catalog" legacyBehavior>
                   <a className="block bg-gray-700 hover:bg-gray-600 border-2 border-amber-400 p-4 transition-all group">
                     <div className="flex items-center">
-                      <span className="text-2xl mr-3 text-amber-300">📋</span>
+                      <LuList className="text-2xl mr-3 text-amber-300" />
                       <div>
                         <h3 className="font-bold text-amber-300 group-hover:text-amber-200">
                           CATALOG MODULE
@@ -103,7 +103,7 @@ const Home: NextPage = () => {
                 <Link href="/events" legacyBehavior>
                   <a className="block bg-gray-700 hover:bg-gray-600 border-2 border-amber-400 p-4 transition-all group">
                     <div className="flex items-center">
-                      <span className="text-2xl mr-3 text-amber-300">🗓️</span>
+                      <TfiCalendar className="text-2xl mr-3 text-amber-300" />
                       <div>
                         <h3 className="font-bold text-amber-300 group-hover:text-amber-200">
                           EVENT LOGS MODULE

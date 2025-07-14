@@ -2,9 +2,8 @@
 
 @layer base {
   html {
-    font-family: monospace, sans-serif;
-    font-weight: bold;
-    background-color: #f0f0f0;
+    font-family: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+    font-weight: 600;
   }
 }
 

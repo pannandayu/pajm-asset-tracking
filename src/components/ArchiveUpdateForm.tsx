@@ -24,6 +24,7 @@ const ArchiveUpdateForm = ({
     currentArchive || []
   );
   const [activeRecordIndex, setActiveRecordIndex] = useState<number>(0);
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleArchiveChange = (
     index: number,
@@ -82,6 +83,7 @@ const ArchiveUpdateForm = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSaving(true);
     onUpdate(archiveRecords);
   };
 
@@ -343,7 +345,7 @@ const ArchiveUpdateForm = ({
                 className="px-4 py-2 bg-amber-600 text-black border-2 border-amber-500 rounded hover:bg-amber-500 font-bold"
                 onClick={handleSubmit}
               >
-                UPDATE ARCHIVE
+                {isSaving ? "UPDATING..." : "UPDATE"}
               </button>
             )}
           </div>

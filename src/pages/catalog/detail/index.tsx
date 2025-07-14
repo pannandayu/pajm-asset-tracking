@@ -1,10 +1,12 @@
 import ArchiveUpdateForm from "@/components/ArchiveUpdateForm";
-import AssetPrintView from "@/components/AssetPrintView";
+import AssetUpdateForm from "@/components/AssetUpdateForm";
+import ComponentForm from "@/components/ComponentForm";
+import ComplementaryForm from "@/components/ComplementaryForm";
 import DataRow from "@/components/DataRow";
 import { AssetPdfDocument } from "@/components/GeneratePdf";
 import { useAuth } from "@/context/AuthContext";
 import { assetAtom } from "@/context/jotai";
-import { Asset } from "@/types";
+import { Asset, ComplementaryItem, ComponentItem } from "@/types";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import dayjs from "dayjs";
 import { useAtomValue } from "jotai";
@@ -36,11 +38,49 @@ const AssetDetail = () => {
     useState(false);
   const [showComponentArchiveForm, setShowComponentArchiveForm] =
     useState(false);
+  const [showUpdateAssetForm, setShowUpdateAssetForm] = useState(false);
+  const [showComponentForm, setShowComponentForm] = useState(false);
+  const [showComplementaryForm, setShowComplementaryForm] = useState(false);
+  const [updateArchiveItem, setUpdateArchiveItem] = useState<ComponentItem>();
+  const [updateArchiveComplementaryItem, setupdateArchiveComplementaryItem] =
+    useState<ComplementaryItem>();
 
   const { id: assetId } = router.query;
 
   const handleBack = () => {
     router.push("/catalog");
+  };
+
+  const fetchAsset = async () => {
+    try {
+      const response = await fetch("/api/fetch-asset");
+      const result = (await response.json()) as Asset[];
+      return result;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const reload = async () => {
+    try {
+      await fetchAsset().then((assetList) => {
+        if (!assetList) {
+          router.replace("/catalog");
+          return;
+        }
+        const selected = assetList.find((el) => el.id === assetId);
+        if (!selected) {
+          router.replace("/catalog");
+          return;
+        }
+        setSelectedAsset({
+          ...selected,
+          current_book_value: calculateCurrentBookValue(selected),
+        });
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
@@ -52,20 +92,18 @@ const AssetDetail = () => {
     }
 
     if (!asset) {
-      router.replace("/catalog");
-      return;
+      reload();
+    } else {
+      const selected = asset.find((el) => el.id === assetId);
+      if (!selected) {
+        router.replace("/catalog");
+        return;
+      }
+      setSelectedAsset({
+        ...selected,
+        current_book_value: calculateCurrentBookValue(selected),
+      });
     }
-
-    const selected = asset.find((el) => el.id === assetId);
-    if (!selected) {
-      router.replace("/catalog");
-      return;
-    }
-
-    setSelectedAsset({
-      ...selected,
-      current_book_value: calculateCurrentBookValue(selected),
-    });
   }, [auth.loading, auth.user, assetId, asset]);
 
   const calculateCurrentBookValue = (selectedAsset: Asset) => {
@@ -103,11 +141,48 @@ const AssetDetail = () => {
         } else {
           setShowComponentArchiveForm(false);
         }
+        reload();
       } else {
         console.error("Failed to update archive");
       }
     } catch (error) {
       console.error("Error updating archive:", error);
+    }
+  };
+
+  const handleUpdateAssetState = async ({
+    status,
+    active_date,
+    notes,
+  }: {
+    status: string;
+    active_date: Date;
+    notes: string;
+  }) => {
+    try {
+      if (!selectedAsset) return;
+
+      const data = {
+        id: selectedAsset.id,
+        status,
+        active_date: dayjs(active_date).format("YYYY-MM-DD"),
+        notes,
+      };
+
+      const response = await fetch("/api/update-asset-state", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error(response.status.toString());
+      }
+
+      setShowUpdateAssetForm(false);
+      reload();
+    } catch (error: any) {
+      console.log(error);
     }
   };
 
@@ -187,27 +262,35 @@ const AssetDetail = () => {
               <div className="flex flex-col mt-4">
                 <h4 className="font-bold mb-2">Purchase History:</h4>
                 {renderPurchaseHistory(item.archive)}
-                <button
-                  className="border-1 rounded-sm mt-6 py-2 hover:bg-gray-700 cursor-pointer"
-                  onClick={() => setShowComplementaryArchiveForm(true)}
-                >
-                  Add Archive
-                </button>
-                {showComplementaryArchiveForm && (
-                  <ArchiveUpdateForm
-                    itemId={item.complementary_id}
-                    itemType={"complementary"}
-                    currentArchive={item.archive}
-                    onClose={() => setShowComplementaryArchiveForm(false)}
-                    onUpdate={(archive) =>
-                      handleUpdateArchive(
-                        item.complementary_id,
-                        archive,
-                        "complementary"
-                      )
-                    }
-                  />
-                )}
+                <div className="flex gap-6">
+                  <button
+                    className="border-1 rounded-sm mt-6 p-2 hover:bg-gray-700 cursor-pointer"
+                    onClick={() => {
+                      setShowComplementaryArchiveForm(true);
+                      setupdateArchiveComplementaryItem(item);
+                    }}
+                  >
+                    Add/Edit Archive
+                  </button>
+                </div>
+                {showComplementaryArchiveForm &&
+                  updateArchiveComplementaryItem && (
+                    <ArchiveUpdateForm
+                      itemId={updateArchiveComplementaryItem.complementary_id}
+                      itemType={"complementary"}
+                      currentArchive={updateArchiveComplementaryItem.archive}
+                      onClose={() => {
+                        setShowComplementaryArchiveForm(false);
+                      }}
+                      onUpdate={(archive) =>
+                        handleUpdateArchive(
+                          updateArchiveComplementaryItem.complementary_id,
+                          archive,
+                          "complementary"
+                        )
+                      }
+                    />
+                  )}
               </div>
             )}
           </div>
@@ -237,21 +320,26 @@ const AssetDetail = () => {
               <div className="flex flex-col mt-4">
                 <h4 className="font-bold mb-2">Purchase History:</h4>
                 {renderPurchaseHistory(item.archive)}
-                <button
-                  className="border-1 rounded-sm mt-6 py-2 hover:bg-gray-700 cursor-pointer"
-                  onClick={() => setShowComponentArchiveForm(true)}
-                >
-                  Add Archive
-                </button>
-                {showComponentArchiveForm && (
+                <div className="flex gap-6">
+                  <button
+                    className="border-1 rounded-sm mt-6 p-2 hover:bg-gray-700 cursor-pointer"
+                    onClick={() => {
+                      setShowComponentArchiveForm(true);
+                      setUpdateArchiveItem(item);
+                    }}
+                  >
+                    Add/Edit Archive
+                  </button>
+                </div>
+                {showComponentArchiveForm && updateArchiveItem && (
                   <ArchiveUpdateForm
-                    itemId={item.component_id}
+                    itemId={updateArchiveItem.component_id}
                     itemType={"component"}
-                    currentArchive={item.archive}
+                    currentArchive={updateArchiveItem.archive}
                     onClose={() => setShowComponentArchiveForm(false)}
                     onUpdate={(archive) =>
                       handleUpdateArchive(
-                        item.component_id,
+                        updateArchiveItem.component_id,
                         archive,
                         "component"
                       )
@@ -286,6 +374,13 @@ const AssetDetail = () => {
                   width={550}
                 />
               </div>
+              {selectedAsset.notes && (
+                <div className="flex flex-col gap-2">
+                  <h1 className="text-xl">Notes</h1>
+                  <hr />
+                  <p>{selectedAsset.notes}</p>
+                </div>
+              )}
             </div>
 
             <div className="flex-1">
@@ -323,6 +418,23 @@ const AssetDetail = () => {
                   data={dayjs(selectedAsset.active_date).format("DD MMMM YYYY")}
                 />
                 <DataRow label="Status" data={selectedAsset.status} />
+
+                {showUpdateAssetForm && (
+                  <AssetUpdateForm
+                    asset={selectedAsset}
+                    onSave={({ status, active_date, notes }) =>
+                      handleUpdateAssetState({ status, active_date, notes })
+                    }
+                    onCancel={() => setShowUpdateAssetForm(false)}
+                  />
+                )}
+
+                <button
+                  className="mt-4 px-4 py-2 bg-amber-700 hover:bg-amber-500 text-black border-2 border-amber-500 font-bold transition-all"
+                  onClick={() => setShowUpdateAssetForm(true)}
+                >
+                  Update Asset's State
+                </button>
               </div>
             </div>
           </div>
@@ -370,12 +482,20 @@ const AssetDetail = () => {
               <h2 className="text-2xl font-bold border-b border-amber-400 pb-2">
                 COMPLEMENTARY ASSETS
               </h2>
-              <button
-                onClick={() => setShowComplementary(!showComplementary)}
-                className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-black font-bold rounded"
-              >
-                {showComplementary ? "Hide" : "Show"}
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setShowComplementary(!showComplementary)}
+                  className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-black font-bold rounded"
+                >
+                  {showComplementary ? "Hide" : "Show"}
+                </button>
+                <button
+                  onClick={() => setShowComplementaryForm(true)}
+                  className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-black font-bold rounded"
+                >
+                  Add New
+                </button>
+              </div>
             </div>
             {showComplementary && renderComplementaryItems()}
           </div>
@@ -385,12 +505,20 @@ const AssetDetail = () => {
               <h2 className="text-2xl font-bold border-b border-amber-400 pb-2 mb-2">
                 COMPONENT ITEMS
               </h2>
-              <button
-                onClick={() => setShowComponents(!showComponents)}
-                className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-black font-bold rounded"
-              >
-                {showComponents ? "Hide" : "Show"}
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setShowComponents(!showComponents)}
+                  className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-black font-bold rounded"
+                >
+                  {showComponents ? "Hide" : "Show"}
+                </button>
+                <button
+                  onClick={() => setShowComponentForm(true)}
+                  className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-black font-bold rounded"
+                >
+                  Add New
+                </button>
+              </div>
             </div>
             {showComponents && renderComponentItems()}
           </div>
@@ -402,28 +530,47 @@ const AssetDetail = () => {
             >
               ← BACK
             </button>
-            {/* {auth.user.tagging === "0" && (
-              <AssetPrintView asset={selectedAsset} />
-            )} */}
-
             <PDFDownloadLink
               document={
                 <AssetPdfDocument
                   asset={selectedAsset}
                   assetImageUrl={selectedAsset.image_url}
                   tagging={auth.user.tagging}
+                  username={auth.user.name}
                 />
               }
-              fileName={`${selectedAsset.id}_${
-                selectedAsset.name
-              }_${dayjs().format("DDMMYY")}_Data.pdf`}
-              className="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-black border-2 border-amber-500 font-bold transition-all"
+              fileName={`${selectedAsset.id}_${selectedAsset.name}_${
+                dayjs().format("DDMMYY") + auth.user.tagging
+              }_Data.pdf`}
+              className="px-4 py-2 bg-amber-700 hover:bg-amber-500 text-black border-2 border-amber-500 font-bold transition-all"
             >
               {({ loading }) =>
                 loading ? "Preparing document..." : "Download PDF"
               }
             </PDFDownloadLink>
           </div>
+
+          {showComponentForm && (
+            <ComponentForm
+              assetId={selectedAsset.id}
+              onClose={() => setShowComponentForm(false)}
+              onSubmit={() => {
+                setShowComponentForm(false);
+                reload();
+              }}
+            />
+          )}
+
+          {showComplementaryForm && (
+            <ComplementaryForm
+              assetId={selectedAsset.id}
+              onClose={() => setShowComplementaryForm(false)}
+              onSubmit={() => {
+                setShowComplementaryForm(false);
+                reload();
+              }}
+            />
+          )}
         </div>
       )}
     </div>

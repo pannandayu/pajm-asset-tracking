@@ -309,7 +309,6 @@ const AssetModal = ({
                       value={formData.model}
                       onChange={handleChange}
                       className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
-                      required
                     />
                   </div>
                   <div>

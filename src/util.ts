@@ -9,3 +9,7 @@ export const query = async (text: string, params?: string[]) => {
   const res = params ? await pool.query(text, params) : await pool.query(text);
   return res.rows;
 };
+
+export const getClient = async () => {
+  return await pool.connect();
+};

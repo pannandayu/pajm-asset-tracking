@@ -55,7 +55,6 @@ export interface Component {
   name: string;
   brand: string;
   model: string;
-
   serial_number: string;
   part_number: string;
   supplier_vendor: string;
@@ -65,7 +64,6 @@ export interface Component {
   status: string;
   warranty: string;
   active_date: Date;
-
   expected_lifespan: number;
   notes: string;
 }

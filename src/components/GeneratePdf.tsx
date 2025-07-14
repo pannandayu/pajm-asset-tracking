@@ -103,10 +103,12 @@ export const AssetPdfDocument = ({
   asset,
   assetImageUrl,
   tagging,
+  username,
 }: {
   asset: Asset;
   assetImageUrl: string;
   tagging: string;
+  username: string;
 }) => (
   <Document>
     {/* First Page */}
@@ -204,7 +206,7 @@ export const AssetPdfDocument = ({
 
       {/* Footer for first page */}
       <Text style={styles.footer}>
-        Auto-Generated {dayjs().format("DD MMMM YYYY - HH:mm")} by Asset Control
+        Auto-Generated {dayjs().format("DD MMMM YYYY - HH:mm")} by {username}
       </Text>
     </Page>
 
@@ -252,7 +254,7 @@ export const AssetPdfDocument = ({
       )}
       {/* Footer for second page */}
       <Text style={styles.footer}>
-        Auto-Generated {dayjs().format("DD MMMM YYYY - HH:mm")} by Asset Control
+        Auto-Generated {dayjs().format("DD MMMM YYYY - HH:mm")} by {username}
       </Text>
     </Page>
 
@@ -305,7 +307,7 @@ export const AssetPdfDocument = ({
       )}
       {/* Footer for third page */}
       <Text style={styles.footer}>
-        Auto-Generated {dayjs().format("DD MMMM YYYY - HH:mm")} by Asset Control
+        Auto-Generated {dayjs().format("DD MMMM YYYY - HH:mm")} by {username}
       </Text>
     </Page>
   </Document>
