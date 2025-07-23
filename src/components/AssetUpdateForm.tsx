@@ -31,7 +31,7 @@ const AssetUpdateForm = ({ asset, onSave, onCancel }: AssetUpdateFormProps) => {
   };
 
   return (
-    <div className="bg-gray-900 text-amber-300 p-4 font-mono">
+    <div className="bg-gray-700 text-amber-300 p-4 font-mono">
       <div className="max-w-6xl mx-auto border-2 border-amber-400 bg-gray-800 p-6 shadow-lg shadow-amber-400/20">
         <div className="mb-6 border-b-2 border-amber-400 pb-4">
           <h1 className="text-3xl font-bold tracking-wider text-center">

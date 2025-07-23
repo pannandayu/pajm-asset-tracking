@@ -54,7 +54,7 @@ const CatalogPage: NextPage = () => {
   }, [auth.loading, auth.user]);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-amber-300 font-mono lg:px-40 pt-4">
+    <div className="min-h-screen bg-gray-700 text-amber-300 font-mono lg:px-40 pt-4">
       {auth.user && (
         <Fragment>
           {/* Terminal Header */}

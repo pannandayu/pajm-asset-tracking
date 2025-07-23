@@ -269,7 +269,7 @@ const AssetModal = ({
                       name="id"
                       value={formData.id}
                       onChange={handleChange}
-                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                       required
                     />
                   </div>
@@ -282,7 +282,7 @@ const AssetModal = ({
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                       required
                     />
                   </div>
@@ -295,7 +295,7 @@ const AssetModal = ({
                       name="brand"
                       value={formData.brand}
                       onChange={handleChange}
-                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                       required
                     />
                   </div>
@@ -308,7 +308,7 @@ const AssetModal = ({
                       name="model"
                       value={formData.model}
                       onChange={handleChange}
-                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                     />
                   </div>
                   <div>
@@ -320,7 +320,7 @@ const AssetModal = ({
                       name="category"
                       value={formData.category}
                       onChange={handleChange}
-                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                       required
                     />
                   </div>
@@ -333,7 +333,7 @@ const AssetModal = ({
                       name="sub_category"
                       value={formData.sub_category}
                       onChange={handleChange}
-                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                       required
                     />
                   </div>
@@ -348,7 +348,7 @@ const AssetModal = ({
                       name="purchase_price"
                       value={formData.purchase_price}
                       onChange={handleChange}
-                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                       required
                     />
                   </div>
@@ -361,7 +361,7 @@ const AssetModal = ({
                       name="purchase_date"
                       value={dayjs(formData.purchase_date).format("YYYY-MM-DD")}
                       onChange={handleChange}
-                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                       required
                     />
                   </div>
@@ -374,7 +374,7 @@ const AssetModal = ({
                       name="department_owner"
                       value={formData.department_owner}
                       onChange={handleChange}
-                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                       required
                     />
                   </div>
@@ -387,7 +387,7 @@ const AssetModal = ({
                       name="primary_user"
                       value={formData.primary_user}
                       onChange={handleChange}
-                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                       required
                     />
                   </div>
@@ -399,7 +399,7 @@ const AssetModal = ({
                       name="depreciation_method"
                       value={formData.depreciation_method}
                       onChange={handleChange}
-                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                     >
                       <option value="">Select Method</option>
                       <option value="Straight-Line">Straight-Line</option>
@@ -417,7 +417,7 @@ const AssetModal = ({
                       name="depreciation_rate"
                       value={formData.depreciation_rate}
                       onChange={handleChange}
-                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                     />
                   </div>
 
@@ -431,7 +431,7 @@ const AssetModal = ({
                       name="serial_number"
                       value={formData.serial_number}
                       onChange={handleChange}
-                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                     />
                   </div>
                   <div>
@@ -443,7 +443,7 @@ const AssetModal = ({
                       name="part_number"
                       value={formData.part_number}
                       onChange={handleChange}
-                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                     />
                   </div>
                   <div>
@@ -455,7 +455,7 @@ const AssetModal = ({
                       name="vendor_supplier"
                       value={formData.vendor_supplier}
                       onChange={handleChange}
-                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                     />
                   </div>
                   <div>
@@ -467,7 +467,7 @@ const AssetModal = ({
                       name="purchase_order_number"
                       value={formData.purchase_order_number}
                       onChange={handleChange}
-                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                     />
                   </div>
 
@@ -480,7 +480,7 @@ const AssetModal = ({
                       name="status"
                       value={formData.status}
                       onChange={handleChange}
-                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                       required
                     >
                       <option value="">Select Status</option>
@@ -497,7 +497,7 @@ const AssetModal = ({
                       name="active_date"
                       value={dayjs(formData.active_date).format("YYYY-MM-DD")}
                       onChange={handleChange}
-                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                     />
                   </div>
                   <div>
@@ -509,7 +509,7 @@ const AssetModal = ({
                       name="expected_lifespan"
                       value={formData.expected_lifespan}
                       onChange={handleChange}
-                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                     />
                   </div>
                   <div>
@@ -521,7 +521,7 @@ const AssetModal = ({
                       name="warranty"
                       value={formData.warranty}
                       onChange={handleChange}
-                      className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                      className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                     />
                   </div>
 
@@ -533,7 +533,7 @@ const AssetModal = ({
                     name="notes"
                     value={formData.notes}
                     onChange={handleChange}
-                    className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                    className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                     rows={3}
                   />
                 </div>
@@ -572,7 +572,7 @@ const AssetModal = ({
                           name="id"
                           value={asset.id}
                           onChange={(e) => handleComplementaryChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                           required
                         />
                       </div>
@@ -585,7 +585,7 @@ const AssetModal = ({
                           name="name"
                           value={asset.name}
                           onChange={(e) => handleComplementaryChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                           required
                         />
                       </div>
@@ -598,7 +598,7 @@ const AssetModal = ({
                           name="brand"
                           value={asset.brand}
                           onChange={(e) => handleComplementaryChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                           required
                         />
                       </div>
@@ -611,7 +611,7 @@ const AssetModal = ({
                           name="model"
                           value={asset.model}
                           onChange={(e) => handleComplementaryChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                       <div>
@@ -623,7 +623,7 @@ const AssetModal = ({
                           name="category"
                           value={asset.category}
                           onChange={(e) => handleComplementaryChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                           required
                         />
                       </div>
@@ -636,7 +636,7 @@ const AssetModal = ({
                           name="sub_category"
                           value={asset.sub_category}
                           onChange={(e) => handleComplementaryChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                           required
                         />
                       </div>
@@ -649,7 +649,7 @@ const AssetModal = ({
                           name="department_owner"
                           value={asset.department_owner}
                           onChange={(e) => handleComplementaryChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                           required
                         />
                       </div>
@@ -662,7 +662,7 @@ const AssetModal = ({
                           name="serial_number"
                           value={asset.serial_number}
                           onChange={(e) => handleComplementaryChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                       <div>
@@ -674,7 +674,7 @@ const AssetModal = ({
                           name="part_number"
                           value={asset.part_number}
                           onChange={(e) => handleComplementaryChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                       <div>
@@ -686,7 +686,7 @@ const AssetModal = ({
                           name="supplier_vendor"
                           value={asset.supplier_vendor}
                           onChange={(e) => handleComplementaryChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                           required
                         />
                       </div>
@@ -699,7 +699,7 @@ const AssetModal = ({
                           name="purchase_price"
                           value={asset.purchase_price}
                           onChange={(e) => handleComplementaryChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                       <div>
@@ -711,7 +711,7 @@ const AssetModal = ({
                           name="purchase_order_number"
                           value={asset.purchase_order_number}
                           onChange={(e) => handleComplementaryChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
 
@@ -726,7 +726,7 @@ const AssetModal = ({
                             "YYYY-MM-DD"
                           )}
                           onChange={(e) => handleComplementaryChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                       <div>
@@ -738,7 +738,7 @@ const AssetModal = ({
                           name="active_date"
                           value={dayjs(asset.active_date).format("YYYY-MM-DD")}
                           onChange={(e) => handleComplementaryChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                       <div>
@@ -749,7 +749,7 @@ const AssetModal = ({
                           name="status"
                           value={asset.status}
                           onChange={(e) => handleComplementaryChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                           required
                         >
                           <option value="">Select Status</option>
@@ -766,7 +766,7 @@ const AssetModal = ({
                           name="warranty"
                           value={asset.warranty}
                           onChange={(e) => handleComplementaryChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                       <div>
@@ -778,7 +778,7 @@ const AssetModal = ({
                           name="expected_lifespan"
                           value={asset.expected_lifespan}
                           onChange={(e) => handleComplementaryChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                       <div>
@@ -789,7 +789,7 @@ const AssetModal = ({
                           name="depreciation_method"
                           value={asset.depreciation_method}
                           onChange={(e) => handleComplementaryChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         >
                           <option value="">Select Method</option>
                           <option value="Straight-Line">Straight-Line</option>
@@ -807,7 +807,7 @@ const AssetModal = ({
                           name="depreciation_rate"
                           value={asset.depreciation_rate}
                           onChange={(e) => handleComplementaryChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                     </div>
@@ -819,7 +819,7 @@ const AssetModal = ({
                         name="notes"
                         value={asset.notes}
                         onChange={(e) => handleComplementaryChange(index, e)}
-                        className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                        className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         rows={2}
                       />
                     </div>
@@ -865,7 +865,7 @@ const AssetModal = ({
                           name="id"
                           value={component.id}
                           onChange={(e) => handleComponentChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                           required
                         />
                       </div>
@@ -878,7 +878,7 @@ const AssetModal = ({
                           name="name"
                           value={component.name}
                           onChange={(e) => handleComponentChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                           required
                         />
                       </div>
@@ -891,7 +891,7 @@ const AssetModal = ({
                           name="brand"
                           value={component.brand}
                           onChange={(e) => handleComponentChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                           required
                         />
                       </div>
@@ -904,7 +904,7 @@ const AssetModal = ({
                           name="model"
                           value={component.model}
                           onChange={(e) => handleComponentChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                       {/* <div>
@@ -916,7 +916,7 @@ const AssetModal = ({
                           name="category"
                           value={component.category}
                           onChange={(e) => handleComponentChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                           required
                         />
                       </div> */}
@@ -929,7 +929,7 @@ const AssetModal = ({
                           name="sub_category"
                           value={component.sub_category}
                           onChange={(e) => handleComponentChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                           required
                         />
                       </div> */}
@@ -943,7 +943,7 @@ const AssetModal = ({
                           name="serial_number"
                           value={component.serial_number}
                           onChange={(e) => handleComponentChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                       <div>
@@ -955,7 +955,7 @@ const AssetModal = ({
                           name="part_number"
                           value={component.part_number}
                           onChange={(e) => handleComponentChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                       <div>
@@ -967,7 +967,7 @@ const AssetModal = ({
                           name="supplier_vendor"
                           value={component.supplier_vendor}
                           onChange={(e) => handleComponentChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                       <div>
@@ -979,7 +979,7 @@ const AssetModal = ({
                           name="purchase_price"
                           value={component.purchase_price}
                           onChange={(e) => handleComponentChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                       <div>
@@ -991,7 +991,7 @@ const AssetModal = ({
                           name="purchase_order_number"
                           value={component.purchase_order_number}
                           onChange={(e) => handleComponentChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
 
@@ -1006,7 +1006,7 @@ const AssetModal = ({
                             "YYYY-MM-DD"
                           )}
                           onChange={(e) => handleComponentChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                       <div>
@@ -1020,7 +1020,7 @@ const AssetModal = ({
                             "YYYY-MM-DD"
                           )}
                           onChange={(e) => handleComponentChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                       <div>
@@ -1031,7 +1031,7 @@ const AssetModal = ({
                           name="status"
                           value={component.status}
                           onChange={(e) => handleComponentChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                           required
                         >
                           <option value="">Select Status</option>
@@ -1048,7 +1048,7 @@ const AssetModal = ({
                           name="warranty"
                           value={component.warranty}
                           onChange={(e) => handleComponentChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
 
@@ -1061,7 +1061,7 @@ const AssetModal = ({
                           name="expected_lifespan"
                           value={component.expected_lifespan}
                           onChange={(e) => handleComponentChange(index, e)}
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                     </div>
@@ -1073,7 +1073,7 @@ const AssetModal = ({
                         name="notes"
                         value={component.notes}
                         onChange={(e) => handleComponentChange(index, e)}
-                        className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                        className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         rows={2}
                       />
                     </div>

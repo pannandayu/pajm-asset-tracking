@@ -1,4 +1,4 @@
-import { query } from "@/util";
+import { getClient, query } from "@/util";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -11,13 +11,25 @@ export default async function handler(
 
   const { eventData, specificEventData, eventType } = req.body;
 
+  let client;
   try {
+    client = await getClient();
+    if (!client) {
+      throw new Error("Database connection failed");
+    }
+
+    await client.query("BEGIN");
+
+    // Insert into events table
     const eventQuery = `
       INSERT INTO asset.events (
         event_id, asset_id, asset_name, event_type, 
-        event_date, recorded_by, description
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+        event_date, recorded_by, description, event_finish, 
+        status, event_start
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+      RETURNING event_id
     `;
+    
     await query(eventQuery, [
       eventData.event_id,
       eventData.asset_id,
@@ -26,9 +38,15 @@ export default async function handler(
       eventData.event_date,
       eventData.recorded_by,
       eventData.description,
+      eventData.event_finish,
+      eventData.status,
+      eventData.event_start,
     ]);
 
+    // Insert into specific event table
     let specificQuery;
+    let queryParams;
+
     switch (eventType) {
       case "location":
         specificQuery = `
@@ -36,22 +54,23 @@ export default async function handler(
             event_id, location, checked_out_by, checked_in_by
           ) VALUES ($1, $2, $3, $4)
         `;
-        await query(specificQuery, [
+        queryParams = [
           eventData.event_id,
           specificEventData.location,
           specificEventData.checked_out_by,
           specificEventData.checked_in_by,
-        ]);
+        ];
         break;
 
       case "maintenance":
         specificQuery = `
           INSERT INTO asset.maintenance_events (
             event_id, maintenance_type, technician, 
-            duration_minutes, cost, downtime_minutes, notes
-          ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+            duration_minutes, cost, downtime_minutes, 
+            notes, materials_used
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         `;
-        await query(specificQuery, [
+        queryParams = [
           eventData.event_id,
           specificEventData.maintenance_type,
           specificEventData.technician,
@@ -59,17 +78,19 @@ export default async function handler(
           specificEventData.cost,
           specificEventData.downtime_minutes,
           specificEventData.notes,
-        ]);
+          JSON.stringify(specificEventData.materials_used),
+        ];
         break;
 
       case "repair":
         specificQuery = `
           INSERT INTO asset.repair_events (
-            event_id, failure_description, technician, duration_minutes, 
-            cost, downtime_minutes, root_cause, corrective_action, notes
-          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+            event_id, failure_description, technician, 
+            duration_minutes, cost, downtime_minutes, 
+            root_cause, corrective_action, notes, materials_used
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
         `;
-        await query(specificQuery, [
+        queryParams = [
           eventData.event_id,
           specificEventData.failure_description,
           specificEventData.technician,
@@ -79,13 +100,26 @@ export default async function handler(
           specificEventData.root_cause,
           specificEventData.corrective_action,
           specificEventData.notes,
-        ]);
+          JSON.stringify(specificEventData.materials_used),
+        ];
         break;
+
+      default:
+        throw new Error("Invalid event type");
     }
 
-    return res.status(200).json({ message: "OK" });
+    await query(specificQuery, queryParams);
+
+    await client.query("COMMIT");
+
+    return res.status(200).json({
+      success: true,
+    });
   } catch (error) {
-    console.error("Login error:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    console.error("Error saving event:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 }

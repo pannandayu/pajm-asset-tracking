@@ -147,7 +147,7 @@ const ArchiveUpdateForm = ({
                           onChange={(e) =>
                             handleArchiveChange(activeRecordIndex, e)
                           }
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                           required
                         >
                           <option value="Active">Active</option>
@@ -165,7 +165,7 @@ const ArchiveUpdateForm = ({
                           onChange={(e) =>
                             handleArchiveChange(activeRecordIndex, e)
                           }
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                       <div>
@@ -183,7 +183,7 @@ const ArchiveUpdateForm = ({
                           onChange={(e) =>
                             handleArchiveChange(activeRecordIndex, e)
                           }
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                       <div>
@@ -199,7 +199,7 @@ const ArchiveUpdateForm = ({
                           onChange={(e) =>
                             handleArchiveChange(activeRecordIndex, e)
                           }
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                       <div>
@@ -213,7 +213,7 @@ const ArchiveUpdateForm = ({
                           onChange={(e) =>
                             handleArchiveChange(activeRecordIndex, e)
                           }
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                       <div>
@@ -229,7 +229,7 @@ const ArchiveUpdateForm = ({
                           onChange={(e) =>
                             handleArchiveChange(activeRecordIndex, e)
                           }
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                       <div>
@@ -245,7 +245,7 @@ const ArchiveUpdateForm = ({
                           onChange={(e) =>
                             handleArchiveChange(activeRecordIndex, e)
                           }
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                       <div>
@@ -261,7 +261,7 @@ const ArchiveUpdateForm = ({
                           onChange={(e) =>
                             handleArchiveChange(activeRecordIndex, e)
                           }
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                       <div>
@@ -278,7 +278,7 @@ const ArchiveUpdateForm = ({
                           onChange={(e) =>
                             handleArchiveChange(activeRecordIndex, e)
                           }
-                          className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                          className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         />
                       </div>
                     </div>
@@ -292,7 +292,7 @@ const ArchiveUpdateForm = ({
                         onChange={(e) =>
                           handleArchiveChange(activeRecordIndex, e)
                         }
-                        className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded"
+                        className="w-full p-2 bg-gray-700 border-2 border-amber-400 rounded"
                         rows={3}
                       />
                     </div>

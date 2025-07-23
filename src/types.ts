@@ -74,9 +74,11 @@ export interface EventLog {
   asset_name: string;
   event_type: "location" | "maintenance" | "repair";
   event_date: string;
+  event_finish: string;
   recorded_by: string;
   description: string;
   created_at: string;
+  status: string;
 }
 
 export interface LocationHistory {
@@ -102,15 +104,24 @@ export interface MaintenanceRecord {
   downtime: number; // in hours
 }
 
+export interface MaterialItem {
+  name: string;
+  quantity: number;
+  uom: string;
+  price: number;
+}
+
 export interface Event {
-  id: string;
   event_id: string;
-  event_type: string;
-  event_date: string;
   asset_id: string;
   asset_name: string;
+  event_type: "location" | "maintenance" | "repair";
+  event_date: string;
+  event_start?: string;
+  event_finish?: string;
   recorded_by: string;
   description: string;
+  status: string;
   location?: {
     location: string;
     checked_out_by: string;
@@ -120,19 +131,22 @@ export interface Event {
     maintenance_type: string;
     technician: string;
     duration_minutes: number;
-    cost: number;
+    cost: number; // Total cost
+    materials_used: MaterialItem[]; // Detailed items
     downtime_minutes: number;
-    notes: string;
+    action: string;
+    notes?: string;
   };
   repair?: {
-    failure_type: string;
+    failure_description: string;
     technician: string;
     duration_minutes: number;
-    cost: number;
+    cost: number; // Total cost
+    materials_used: MaterialItem[]; // Detailed items
     downtime_minutes: number;
     root_cause: string;
     corrective_action: string;
-    notes: string;
+    notes?: string;
   };
 }
 

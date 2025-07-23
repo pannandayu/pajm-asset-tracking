@@ -20,7 +20,7 @@ const AssetPrintView = ({ asset }: AssetPrintViewProps) => {
           PRINT
         </button>
       ) : (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-90 p-4 z-50 overflow-auto">
+        <div className="fixed inset-0 bg-gray-700 bg-opacity-90 p-4 z-50 overflow-auto">
           <div className="max-w-6xl mx-auto bg-gray-800 border-2 border-amber-400 p-6 rounded-lg shadow-xl shadow-amber-400/20">
             <div className="flex justify-end mb-4"></div>
             <div ref={printRef}>

@@ -107,14 +107,15 @@ const AssetDetail = () => {
   }, [auth.loading, auth.user, assetId, asset]);
 
   const calculateCurrentBookValue = (selectedAsset: Asset) => {
-    const activeDate = selectedAsset.active_date;
-    const purcPrice = selectedAsset.purchase_price;
-    const deprRate = selectedAsset.depreciation_rate;
-    const monthCount = dayjs(new Date()).diff(activeDate, "month");
-    const deprValue = Math.trunc(
-      (deprRate / 100) * (monthCount / 12) * purcPrice
+    const monthCount = dayjs(new Date()).diff(
+      selectedAsset.purchase_date,
+      "month"
     );
-    return purcPrice - deprValue;
+    return (
+      selectedAsset.purchase_price -
+      (selectedAsset.purchase_price / selectedAsset.expected_lifespan / 12) *
+        monthCount
+    );
   };
 
   const handleUpdateArchive = async (
@@ -355,7 +356,7 @@ const AssetDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-amber-300 p-4 font-mono">
+    <div className="min-h-screen bg-gray-700 text-amber-300 p-4 font-mono">
       {auth.user && selectedAsset && (
         <div className="max-w-6xl mx-auto border-2 border-amber-400 bg-gray-800 p-6 shadow-lg shadow-amber-400/20">
           <div className="mb-6 border-b-2 border-amber-400 pb-4">

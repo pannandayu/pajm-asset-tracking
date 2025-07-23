@@ -48,7 +48,7 @@ const Home: NextPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-amber-300 font-mono p-4 flex items-center justify-center">
+    <div className="min-h-screen bg-gray-700 text-amber-300 font-mono p-4 flex items-center justify-center">
       <Head>
         <title>Asset Management Portal</title>
         <meta
@@ -61,7 +61,7 @@ const Home: NextPage = () => {
         {/* Terminal Header */}
         <div className="bg-gray-800 border-2 border-amber-400 p-4 mb-6 text-center shadow-lg shadow-amber-400/20">
           <h1 className="text-2xl font-bold tracking-wider">
-            ASSET TRACKING TERMINAL
+            ASSET TRACKING TERMINAL v1.0
           </h1>
           <p className="text-amber-400 text-sm mt-1">SECURED ACCESS SYSTEM</p>
         </div>
@@ -153,7 +153,7 @@ const Home: NextPage = () => {
                         }))
                       }
                       required
-                      className="w-full bg-gray-900 border-2 border-amber-400 p-2 text-amber-300 focus:outline-none focus:ring-1 focus:ring-amber-400"
+                      className="w-full bg-gray-700 border-2 border-amber-400 p-2 text-amber-300 focus:outline-none focus:ring-1 focus:ring-amber-400"
                     />
                   </div>
 
@@ -176,7 +176,7 @@ const Home: NextPage = () => {
                         }))
                       }
                       required
-                      className="w-full bg-gray-900 border-2 border-amber-400 p-2 text-amber-300 focus:outline-none focus:ring-1 focus:ring-amber-400"
+                      className="w-full bg-gray-700 border-2 border-amber-400 p-2 text-amber-300 focus:outline-none focus:ring-1 focus:ring-amber-400"
                     />
                   </div>
                 </div>

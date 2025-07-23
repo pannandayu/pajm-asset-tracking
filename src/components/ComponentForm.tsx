@@ -2,7 +2,6 @@ import DataRow from "@/components/DataRow";
 import dayjs from "dayjs";
 import { useState } from "react";
 
-// todo sesuaikan dengan complementary form
 
 interface ComponentFormProps {
   assetId: string;

@@ -32,19 +32,24 @@ const EventIndex = () => {
   const auth = useAuth();
   const [activeAsset, setActiveAsset] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filteredLogs, setFilteredLogs] = useState<EventLog[]>();
+  const [filteredLogs, setFilteredLogs] = useState<EventLog[]>([]);
   const [showModal, setShowModal] = useState(false);
 
   const [eventLog, setEventLog] = useAtom(eventAtom);
   const [asset, setAsset] = useAtom(assetAtom);
 
-  const filter = (list: any[]) => {
-    return list.filter(
-      (log) =>
-        (activeAsset === "all" || log.assetId === activeAsset) &&
-        (log.asset_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          log.description.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
+  const filterEvents = () => {
+    if (!eventLog) return [];
+
+    return eventLog.filter((log) => {
+      const matchesAsset =
+        activeAsset === "all" || log.asset_id === activeAsset;
+      const matchesSearch =
+        log.asset_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        log.description.toLowerCase().includes(searchTerm.toLowerCase());
+
+      return matchesAsset && matchesSearch;
+    });
   };
 
   const fetchEvents = async () => {
@@ -57,9 +62,7 @@ const EventIndex = () => {
       }
 
       setEventLog(result);
-
-      const filteredEvents = filter(result);
-      setFilteredLogs(filteredEvents);
+      setFilteredLogs(filterEvents());
     } catch (err: any) {
       console.log(err);
     }
@@ -96,15 +99,12 @@ const EventIndex = () => {
 
   useEffect(() => {
     if (eventLog) {
-      setEventLog(eventLog);
-
-      const filteredEvents = filter(eventLog);
-      setFilteredLogs(filteredEvents);
+      setFilteredLogs(filterEvents());
     }
-  }, [eventLog, searchTerm]);
+  }, [eventLog, searchTerm, activeAsset]);
 
   return (
-    <div className="bg-gray-900 min-h-screen p-4 font-mono text-amber-300">
+    <div className="bg-gray-700 min-h-screen p-4 font-mono text-amber-300">
       {/* Header */}
       <div className="max-w-5xl mx-auto">
         <div className="bg-gray-800 rounded-lg p-4 mb-4 border-2 border-amber-400 shadow-lg shadow-amber-400/20">
@@ -214,6 +214,18 @@ const EventIndex = () => {
                       <span className="sm:ml-0 md:ml-0 lg:ml-auto text-sm font-medium text-amber-300">
                         {event.asset_id} - {event.asset_name}
                       </span>
+
+                      <span
+                        className={`text-xs opacity-70 border-1 p-1 rounded-md border-black text-black ${
+                          event.status === "closed"
+                            ? "bg-green-300"
+                            : event.status === "open"
+                            ? "bg-blue-400"
+                            : "bg-orange-300"
+                        }`}
+                      >
+                        {event.status[0].toUpperCase() + event.status.slice(1)}
+                      </span>
                     </div>
 
                     {/* Event Description */}
@@ -246,8 +258,7 @@ const EventIndex = () => {
       {showModal && (
         <EventModal
           onClose={() => {
-            setShowModal(false)
-            
+            setShowModal(false);
           }}
           onSubmit={() => {
             setShowModal(false);
