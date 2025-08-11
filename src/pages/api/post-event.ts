@@ -11,6 +11,12 @@ export default async function handler(
 
   const { eventData, specificEventData, eventType } = req.body;
 
+  console.log({
+    eventData,
+    specificEventData,
+    eventType,
+  });
+
   let client;
   try {
     client = await getClient();
@@ -29,7 +35,7 @@ export default async function handler(
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
       RETURNING event_id
     `;
-    
+
     await query(eventQuery, [
       eventData.event_id,
       eventData.asset_id,
@@ -61,14 +67,13 @@ export default async function handler(
           specificEventData.checked_in_by,
         ];
         break;
-
       case "maintenance":
         specificQuery = `
           INSERT INTO asset.maintenance_events (
             event_id, maintenance_type, technician, 
             duration_minutes, cost, downtime_minutes, 
-            notes, materials_used
-          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            notes, materials_used, actions
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
         `;
         queryParams = [
           eventData.event_id,
@@ -77,11 +82,11 @@ export default async function handler(
           specificEventData.duration_minutes,
           specificEventData.cost,
           specificEventData.downtime_minutes,
-          specificEventData.notes,
+          specificEventData.notes || "",
           JSON.stringify(specificEventData.materials_used),
+          JSON.stringify(specificEventData.actions),
         ];
         break;
-
       case "repair":
         specificQuery = `
           INSERT INTO asset.repair_events (
@@ -98,12 +103,11 @@ export default async function handler(
           specificEventData.cost,
           specificEventData.downtime_minutes,
           specificEventData.root_cause,
-          specificEventData.corrective_action,
+          JSON.stringify(specificEventData.corrective_action),
           specificEventData.notes,
           JSON.stringify(specificEventData.materials_used),
         ];
         break;
-
       default:
         throw new Error("Invalid event type");
     }

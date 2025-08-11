@@ -134,7 +134,7 @@ export interface Event {
     cost: number; // Total cost
     materials_used: MaterialItem[]; // Detailed items
     downtime_minutes: number;
-    action: string;
+    actions: string;
     notes?: string;
   };
   repair?: {

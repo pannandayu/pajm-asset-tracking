@@ -32,7 +32,7 @@ const EventIndex = () => {
   const auth = useAuth();
   const [activeAsset, setActiveAsset] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filteredLogs, setFilteredLogs] = useState<EventLog[]>([]);
+  const [filteredLogs, setFilteredLogs] = useState<EventLog[]>();
   const [showModal, setShowModal] = useState(false);
 
   const [eventLog, setEventLog] = useAtom(eventAtom);
@@ -156,12 +156,14 @@ const EventIndex = () => {
           </div>
 
           <div className="flex justify-between gap-4">
-            <button
-              onClick={() => setShowModal(true)}
-              className="bg-amber-600 hover:bg-amber-500 text-black font-bold py-2 px-4 border-b-4 border-amber-700 hover:border-amber-600 rounded-sm transition-all text-sm"
-            >
-              RECORD NEW EVENT
-            </button>
+            {auth.user?.tagging !== "2" && (
+              <button
+                onClick={() => setShowModal(true)}
+                className="bg-amber-600 hover:bg-amber-500 text-black font-bold py-2 px-4 border-b-4 border-amber-700 hover:border-amber-600 rounded-sm transition-all text-sm"
+              >
+                RECORD NEW EVENT
+              </button>
+            )}
             <button
               className="bg-gray-700 hover:bg-gray-600 text-amber-300 border-2 border-amber-400 px-3 py-1 font-bold transition-all text-sm"
               onClick={() => router.push("/")}
@@ -202,9 +204,8 @@ const EventIndex = () => {
                         {event.event_type.toUpperCase()}
                       </span>
                       <span className="text-xs text-amber-200">
-                        {dayjs
-                          .utc(event.event_date)
-                          .locale("id")
+                        {dayjs(event.event_date)
+                          .utc()
                           .format("DD MMM YYYY - HH:mm")}
                       </span>
                       <br />

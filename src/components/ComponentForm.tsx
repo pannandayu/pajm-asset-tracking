@@ -2,7 +2,6 @@ import DataRow from "@/components/DataRow";
 import dayjs from "dayjs";
 import { useState } from "react";
 
-
 interface ComponentFormProps {
   assetId: string;
   onClose: () => void;
@@ -25,7 +24,8 @@ const ComponentForm = ({ assetId, onClose, onSubmit }: ComponentFormProps) => {
     warranty: "",
     active_date: dayjs().format("YYYY-MM-DD"),
     expected_lifespan: 0,
-    notes: "",
+    notes_purchase: "",
+    notes_component: "",
   });
 
   const [isSaving, setIsSaving] = useState(false);
@@ -226,13 +226,27 @@ const ComponentForm = ({ assetId, onClose, onSubmit }: ComponentFormProps) => {
           />
 
           <DataRow
-            label="Notes"
+            label="Purchase Notes"
             data={
               <textarea
                 className="bg-gray-700 text-amber-300 border border-amber-400 p-1 w-full"
                 rows={3}
-                value={component.notes}
-                onChange={(e) => handleChange("notes", e.target.value)}
+                value={component.notes_purchase}
+                onChange={(e) => handleChange("notes_purchase", e.target.value)}
+              />
+            }
+          />
+
+          <DataRow
+            label="Component Notes"
+            data={
+              <textarea
+                className="bg-gray-700 text-amber-300 border border-amber-400 p-1 w-full"
+                rows={3}
+                value={component.notes_component}
+                onChange={(e) =>
+                  handleChange("notes_component", e.target.value)
+                }
               />
             }
           />

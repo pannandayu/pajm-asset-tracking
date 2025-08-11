@@ -1,8 +1,11 @@
-import { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { MaterialItem, Event } from "@/types";
+import dayjs from "dayjs";
+import "dayjs/locale/id";
 
-const UOM = [
+// Constants
+const UOM_OPTIONS = [
   "Pcs",
   "Unit",
   "Roll",
@@ -15,16 +18,39 @@ const UOM = [
   "Box",
   "Pak",
   "Ltr",
-];
+] as const;
 
-const generateCode = (): string => {
+const MAINTENANCE_TYPES = ["preventive", "corrective", "predictive"] as const;
+
+const EVENT_STATUSES = ["open", "in progress", "closed"] as const;
+
+type MaintenanceType = (typeof MAINTENANCE_TYPES)[number];
+type EventStatus = (typeof EVENT_STATUSES)[number];
+type EventType = "location" | "maintenance" | "repair";
+
+// Helper functions
+const generateEventId = (eventType: EventType): string => {
+  const prefix =
+    eventType === "location"
+      ? "EVT-LOC"
+      : eventType === "maintenance"
+      ? "WO-MTC"
+      : "WO-RPR";
+  const datePart = dayjs().locale("id").format("DDMMYY");
+
+  // Generate 3 random letters (A-Z)
   const letters = Array.from({ length: 3 }, () =>
     String.fromCharCode(65 + Math.floor(Math.random() * 26))
   ).join("");
-  const digits = Array.from({ length: 3 }, () =>
+
+  // Generate 3 random digits (0-9)
+  const numbers = Array.from({ length: 3 }, () =>
     Math.floor(Math.random() * 10)
   ).join("");
-  return `${letters}${digits}`;
+
+  const randomPart = `${letters}${numbers}`; // e.g., "ABC123"
+
+  return `${prefix}-${datePart}-${randomPart}`;
 };
 
 const calculateTotalCost = (materials: MaterialItem[]): number => {
@@ -34,20 +60,31 @@ const calculateTotalCost = (materials: MaterialItem[]): number => {
   );
 };
 
+const calculateDuration = (start: string, finish: string): number => {
+  return dayjs(finish).diff(dayjs(start), "minutes");
+};
+
+// Types
+interface ActionItem {
+  description: string;
+  start_time: string;
+  finish_time: string;
+}
+
 interface EventModalProps {
   onClose: () => void;
   onSubmit: () => void;
 }
 
 interface MaintenanceFormData {
-  maintenance_type: string;
+  maintenance_type: MaintenanceType;
   technician: string;
   duration_minutes: number;
   cost: number;
   materials_used: MaterialItem[];
   downtime_minutes: number;
   notes?: string;
-  action: string;
+  actions: ActionItem[];
 }
 
 interface RepairFormData {
@@ -58,7 +95,7 @@ interface RepairFormData {
   materials_used: MaterialItem[];
   downtime_minutes: number;
   root_cause: string;
-  corrective_action: string;
+  corrective_action: ActionItem[];
   notes?: string;
 }
 
@@ -68,42 +105,93 @@ interface LocationFormData {
   checked_in_by?: string;
 }
 
-interface FormDataState extends Omit<Event, "event_id"> {
+type FormDataState = {
+  asset_id: string;
+  asset_name: string;
+  event_type: EventType;
+  event_date: string;
+  event_start: string;
+  event_finish: string;
+  recorded_by: string;
+  description: string;
+  status: EventStatus;
+  location?: LocationFormData;
   maintenance?: MaintenanceFormData;
   repair?: RepairFormData;
-  location?: LocationFormData;
+};
+
+// Type guard functions
+function isMaintenanceFormData(
+  data: MaintenanceFormData | RepairFormData
+): data is MaintenanceFormData {
+  return (data as MaintenanceFormData).maintenance_type !== undefined;
 }
 
 const EventModal = ({ onClose, onSubmit }: EventModalProps) => {
-  const [eventType, setEventType] = useState<
-    "location" | "maintenance" | "repair"
-  >("location");
-  const [formData, setFormData] = useState<FormDataState>({
-    asset_id: "",
-    asset_name: "",
-    event_type: "location",
-    event_date: new Date().toISOString().slice(0, 16),
-    event_start: new Date().toISOString().slice(0, 16),
-    event_finish: new Date().toISOString().slice(0, 16),
-    recorded_by: "",
-    description: "",
-    status: "open",
-    location: {
-      location: "",
-      checked_out_by: "",
-      checked_in_by: "",
-    },
-  });
-
-  const [newMaterial, setNewMaterial] = useState<MaterialItem>({
-    name: "",
-    quantity: 1,
-    uom: "Pcs",
-    price: 0,
-  });
-
-  const [isSaving, setIsSaving] = useState(false);
   const auth = useAuth();
+  const [eventType, setEventType] = useState<EventType>("location");
+  const [formData, setFormData] = useState<FormDataState>(getInitialFormData());
+  const [newMaterial, setNewMaterial] = useState<MaterialItem>(
+    getInitialMaterial()
+  );
+  const [newAction, setNewAction] = useState<ActionItem>(getInitialAction());
+  const [isSaving, setIsSaving] = useState(false);
+
+  function getInitialFormData(): FormDataState {
+    const now = new Date().toISOString().slice(0, 16);
+    return {
+      asset_id: "",
+      asset_name: "",
+      event_type: "location",
+      event_date: now,
+      event_start: now,
+      event_finish: now,
+      recorded_by: auth.user?.name || "",
+      description: "",
+      status: "open",
+      location: {
+        location: "",
+        checked_out_by: "",
+      },
+      maintenance: {
+        maintenance_type: "preventive",
+        technician: "",
+        duration_minutes: 0,
+        cost: 0,
+        materials_used: [],
+        downtime_minutes: 0,
+        actions: [],
+      },
+      repair: {
+        failure_description: "",
+        technician: "",
+        duration_minutes: 0,
+        cost: 0,
+        materials_used: [],
+        downtime_minutes: 0,
+        root_cause: "",
+        corrective_action: [],
+      },
+    };
+  }
+
+  function getInitialMaterial(): MaterialItem {
+    return {
+      name: "",
+      quantity: 1,
+      uom: "Pcs",
+      price: 0,
+    };
+  }
+
+  function getInitialAction(): ActionItem {
+    const now = new Date().toISOString().slice(0, 16);
+    return {
+      description: "",
+      start_time: now,
+      finish_time: now,
+    };
+  }
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -124,152 +212,180 @@ const EventModal = ({ onClose, onSubmit }: EventModalProps) => {
     }
   };
 
+  // Material handlers
+  const handleMaterialChange = (
+    field: keyof MaterialItem,
+    value: string | number
+  ) => {
+    setNewMaterial((prev) => ({ ...prev, [field]: value }));
+  };
+
   const handleAddMaterial = () => {
-    if (newMaterial.name.trim() && newMaterial.price >= 0) {
-      if (eventType === "maintenance") {
-        const currentMaterials = formData.maintenance?.materials_used || [];
-        const updatedMaterials = [...currentMaterials, newMaterial];
+    if (!newMaterial.name.trim() || newMaterial.price < 0) return;
 
-        setFormData((prev) => ({
-          ...prev,
-          maintenance: {
-            ...prev.maintenance!,
-            materials_used: updatedMaterials,
-            cost: calculateTotalCost(updatedMaterials),
-          },
-        }));
-      } else if (eventType === "repair") {
-        const currentMaterials = formData.repair?.materials_used || [];
-        const updatedMaterials = [...currentMaterials, newMaterial];
+    const field = eventType === "maintenance" ? "maintenance" : "repair";
+    const currentMaterials = formData[field]?.materials_used || [];
+    const updatedMaterials = [...currentMaterials, newMaterial];
 
-        setFormData((prev) => ({
-          ...prev,
-          repair: {
-            ...prev.repair!,
-            materials_used: updatedMaterials,
-            cost: calculateTotalCost(updatedMaterials),
-          },
-        }));
-      }
+    setFormData((prev) => ({
+      ...prev,
+      [field]: {
+        ...prev[field]!,
+        materials_used: updatedMaterials,
+        cost: calculateTotalCost(updatedMaterials),
+      },
+    }));
 
-      setNewMaterial({
-        name: "",
-        quantity: 1,
-        uom: "Pcs",
-        price: 0,
-      });
-    }
+    setNewMaterial(getInitialMaterial());
   };
 
   const handleRemoveMaterial = (index: number) => {
+    const field = eventType === "maintenance" ? "maintenance" : "repair";
+    const currentMaterials = formData[field]?.materials_used || [];
+    const updatedMaterials = [...currentMaterials];
+    updatedMaterials.splice(index, 1);
+
+    setFormData((prev) => ({
+      ...prev,
+      [field]: {
+        ...prev[field]!,
+        materials_used: updatedMaterials,
+        cost: calculateTotalCost(updatedMaterials),
+      },
+    }));
+  };
+
+  // Action handlers
+  const handleActionChange = (field: keyof ActionItem, value: string) => {
+    setNewAction((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleAddAction = () => {
+    if (!newAction.description.trim()) return;
+
     if (eventType === "maintenance") {
-      const currentMaterials = formData.maintenance?.materials_used || [];
-      const updatedMaterials = [...currentMaterials];
-      updatedMaterials.splice(index, 1);
+      const currentActions = formData.maintenance?.actions || [];
+      const updatedActions = [...currentActions, newAction];
 
       setFormData((prev) => ({
         ...prev,
         maintenance: {
           ...prev.maintenance!,
-          materials_used: updatedMaterials,
-          cost: calculateTotalCost(updatedMaterials),
+          actions: updatedActions,
         },
       }));
     } else if (eventType === "repair") {
-      const currentMaterials = formData.repair?.materials_used || [];
-      const updatedMaterials = [...currentMaterials];
-      updatedMaterials.splice(index, 1);
+      const currentActions = formData.repair?.corrective_action || [];
+      const updatedActions = [...currentActions, newAction];
 
       setFormData((prev) => ({
         ...prev,
         repair: {
           ...prev.repair!,
-          materials_used: updatedMaterials,
-          cost: calculateTotalCost(updatedMaterials),
+          corrective_action: updatedActions,
+        },
+      }));
+    }
+
+    setNewAction(getInitialAction());
+  };
+
+  const handleRemoveAction = (index: number) => {
+    if (eventType === "maintenance") {
+      const currentActions = formData.maintenance?.actions || [];
+      const updatedActions = [...currentActions];
+      updatedActions.splice(index, 1);
+
+      setFormData((prev) => ({
+        ...prev,
+        maintenance: {
+          ...prev.maintenance!,
+          actions: updatedActions,
+        },
+      }));
+    } else if (eventType === "repair") {
+      const currentActions = formData.repair?.corrective_action || [];
+      const updatedActions = [...currentActions];
+      updatedActions.splice(index, 1);
+
+      setFormData((prev) => ({
+        ...prev,
+        repair: {
+          ...prev.repair!,
+          corrective_action: updatedActions,
         },
       }));
     }
   };
 
+  // Form submission
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
 
-    console.log(formData);
-    // return
-
-    const event_id = `${eventType === "location" ? "EVT" : "WO"}-${
-      eventType === "repair"
-        ? "RPR"
-        : eventType === "maintenance"
-        ? "MTC"
-        : "LOC"
-    }-${new Date()
-      .toISOString()
-      .slice(2, 10)
-      .replace(/-/g, "")}-${generateCode()}`;
-
-    const eventData = {
-      event_id,
-      asset_id: formData.asset_id,
-      asset_name: formData.asset_name,
-      event_type: eventType,
-      event_date: formData.event_date,
-      event_start: formData.event_start,
-      event_finish: formData.event_finish,
-      recorded_by: formData.recorded_by,
-      description: formData.description,
-      status: formData.status,
-    };
-
-    let specificEventData;
-    if (eventType === "maintenance") {
-      specificEventData = {
-        ...formData.maintenance,
-        cost: calculateTotalCost(formData.maintenance?.materials_used || []),
-      };
-    } else if (eventType === "repair") {
-      specificEventData = {
-        ...formData.repair,
-        cost: calculateTotalCost(formData.repair?.materials_used || []),
-      };
-    } else {
-      specificEventData = {
-        ...formData.location,
-      };
-    }
-
     try {
+      const event_id = generateEventId(eventType);
+      const eventData: Event = {
+        event_id,
+        asset_id: formData.asset_id,
+        asset_name: formData.asset_name,
+        event_type: eventType,
+        event_date: formData.event_date,
+        event_start: formData.event_start,
+        event_finish: formData.event_finish,
+        recorded_by: formData.recorded_by,
+        description: formData.description,
+        status: formData.status,
+      };
+
+      let specificEventData;
+      switch (eventType) {
+        case "maintenance":
+          specificEventData = formData.maintenance;
+          break;
+        case "repair":
+          specificEventData = formData.repair;
+          break;
+        case "location":
+          specificEventData = formData.location;
+          break;
+      }
+
+      console.log({
+        eventData,
+        specificEventData,
+        eventType,
+      });
+      // setIsSaving(false);
+      // return;
+
       const response = await fetch("/api/post-event", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ eventData, specificEventData, eventType }),
+        body: JSON.stringify({
+          eventData,
+          specificEventData,
+          eventType,
+        }),
       });
 
-      if (response.ok) {
-        onSubmit();
-        onClose();
-      } else {
-        console.error("Failed to submit event");
-        setIsSaving(false);
-      }
+      if (!response.ok) throw new Error("Failed to submit event");
+
+      onSubmit();
+      onClose();
     } catch (error) {
       console.error("Error submitting event:", error);
       setIsSaving(false);
     }
   };
 
+  // Render helpers
   const renderMaterialRows = () => {
-    let materials: MaterialItem[] = [];
-    let totalCost = 0;
+    if (eventType === "location") return null;
 
-    if (eventType === "maintenance") {
-      materials = formData.maintenance?.materials_used || [];
-      totalCost = formData.maintenance?.cost || 0;
-    } else if (eventType === "repair") {
-      materials = formData.repair?.materials_used || [];
-      totalCost = formData.repair?.cost || 0;
-    }
+    const field = eventType === "maintenance" ? "maintenance" : "repair";
+    const materials = formData[field]?.materials_used || [];
+    const totalCost = formData[field]?.cost || 0;
 
     return (
       <div className="mt-4">
@@ -300,9 +416,7 @@ const EventModal = ({ onClose, onSubmit }: EventModalProps) => {
             <input
               type="text"
               value={newMaterial.name}
-              onChange={(e) =>
-                setNewMaterial({ ...newMaterial, name: e.target.value })
-              }
+              onChange={(e) => handleMaterialChange("name", e.target.value)}
               placeholder="Material"
               className="p-2 bg-gray-900 border border-amber-400 rounded"
             />
@@ -310,10 +424,7 @@ const EventModal = ({ onClose, onSubmit }: EventModalProps) => {
               type="number"
               value={newMaterial.quantity}
               onChange={(e) =>
-                setNewMaterial({
-                  ...newMaterial,
-                  quantity: Number(e.target.value),
-                })
+                handleMaterialChange("quantity", Number(e.target.value))
               }
               placeholder="Qty"
               className="p-2 bg-gray-900 border border-amber-400 rounded"
@@ -321,12 +432,10 @@ const EventModal = ({ onClose, onSubmit }: EventModalProps) => {
             />
             <select
               value={newMaterial.uom}
-              onChange={(e) =>
-                setNewMaterial({ ...newMaterial, uom: e.target.value })
-              }
+              onChange={(e) => handleMaterialChange("uom", e.target.value)}
               className="p-2 bg-gray-900 border border-amber-400 rounded"
             >
-              {UOM.map((unit) => (
+              {UOM_OPTIONS.map((unit) => (
                 <option key={unit} value={unit}>
                   {unit}
                 </option>
@@ -337,10 +446,7 @@ const EventModal = ({ onClose, onSubmit }: EventModalProps) => {
                 type="number"
                 value={newMaterial.price || ""}
                 onChange={(e) =>
-                  setNewMaterial({
-                    ...newMaterial,
-                    price: Number(e.target.value),
-                  })
+                  handleMaterialChange("price", Number(e.target.value))
                 }
                 placeholder="Price per unit"
                 className="flex-1 p-2 bg-gray-900 border border-amber-400 rounded"
@@ -349,6 +455,96 @@ const EventModal = ({ onClose, onSubmit }: EventModalProps) => {
               <button
                 type="button"
                 onClick={handleAddMaterial}
+                className="px-2 bg-amber-600 text-black rounded hover:bg-amber-500"
+              >
+                Add
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderActionRows = () => {
+    if (eventType === "location") return null;
+
+    let actions: ActionItem[] = [];
+    let title = "";
+
+    if (eventType === "maintenance") {
+      actions = formData.maintenance?.actions || [];
+      title = "MAINTENANCE ACTIONS";
+    } else if (eventType === "repair") {
+      actions = formData.repair?.corrective_action || [];
+      title = "CORRECTIVE ACTIONS";
+    }
+
+    return (
+      <div className="mt-4">
+        <label className="block text-sm mb-2 font-bold">{title}:</label>
+        <div className="space-y-2">
+          {actions.map((action: ActionItem, index: number) => (
+            <div key={index} className="flex gap-2 items-center">
+              <div className="flex-1 grid grid-cols-4 gap-2">
+                <div className="bg-gray-700 p-2 rounded">
+                  {action.description}
+                </div>
+                <div className="bg-gray-700 p-2 rounded">
+                  {dayjs(action.start_time).utc().format("DD/MM/YYYY HH:mm")}
+                </div>
+                <div className="bg-gray-700 p-2 rounded">
+                  {dayjs(action.finish_time).utc().format("DD/MM/YYYY HH:mm")}
+                </div>
+                <div className="bg-gray-700 p-2 rounded">
+                  {calculateDuration(action.start_time, action.finish_time)} min
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => handleRemoveAction(index)}
+                className="text-red-500 hover:text-red-400"
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+          <div className="grid grid-cols-4 gap-2">
+            <input
+              type="text"
+              value={newAction.description}
+              onChange={(e) =>
+                handleActionChange("description", e.target.value)
+              }
+              placeholder="Action description"
+              className="p-2 bg-gray-900 border border-amber-400 rounded"
+            />
+            <input
+              type="datetime-local"
+              value={newAction.start_time}
+              onChange={(e) => handleActionChange("start_time", e.target.value)}
+              className="p-2 bg-gray-900 border border-amber-400 rounded"
+            />
+            <input
+              type="datetime-local"
+              value={newAction.finish_time}
+              onChange={(e) =>
+                handleActionChange("finish_time", e.target.value)
+              }
+              className="p-2 bg-gray-900 border border-amber-400 rounded"
+            />
+            <div className="flex gap-2">
+              <div className="flex-1 bg-gray-700 p-2 rounded">
+                {newAction.start_time && newAction.finish_time
+                  ? `${calculateDuration(
+                      newAction.start_time,
+                      newAction.finish_time
+                    )} min`
+                  : "Duration"}
+              </div>
+              <button
+                type="button"
+                onClick={handleAddAction}
                 className="px-2 bg-amber-600 text-black rounded hover:bg-amber-500"
               >
                 Add
@@ -441,11 +637,7 @@ const EventModal = ({ onClose, onSubmit }: EventModalProps) => {
               </label>
               <select
                 value={eventType}
-                onChange={(e) =>
-                  setEventType(
-                    e.target.value as "location" | "maintenance" | "repair"
-                  )
-                }
+                onChange={(e) => setEventType(e.target.value as EventType)}
                 className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded text-amber-300 focus:outline-none focus:ring-1 focus:ring-amber-400"
               >
                 <option value="location">LOCATION</option>
@@ -528,9 +720,11 @@ const EventModal = ({ onClose, onSubmit }: EventModalProps) => {
                       onChange={handleChange}
                       className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded text-amber-300 focus:outline-none focus:ring-1 focus:ring-amber-400"
                     >
-                      <option value="preventive">PREVENTIVE</option>
-                      <option value="corrective">CORRECTIVE</option>
-                      <option value="predictive">PREDICTIVE</option>
+                      {MAINTENANCE_TYPES.map((type) => (
+                        <option key={type} value={type}>
+                          {type.toUpperCase()}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div>
@@ -589,20 +783,8 @@ const EventModal = ({ onClose, onSubmit }: EventModalProps) => {
                 </div>
 
                 {renderMaterialRows()}
+                {renderActionRows()}
 
-                <div>
-                  <label className="block text-sm mb-1 font-bold">
-                    CORRECTIVE ACTION:
-                  </label>
-                  <textarea
-                    name="maintenance.action"
-                    value={formData.maintenance?.action || ""}
-                    onChange={handleChange}
-                    className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded text-amber-300 focus:outline-none focus:ring-1 focus:ring-amber-400"
-                    rows={2}
-                    required
-                  />
-                </div>
                 <div>
                   <label className="block text-sm mb-1 font-bold">NOTES:</label>
                   <textarea
@@ -703,19 +885,9 @@ const EventModal = ({ onClose, onSubmit }: EventModalProps) => {
                     required
                   />
                 </div>
-                <div>
-                  <label className="block text-sm mb-1 font-bold">
-                    CORRECTIVE ACTION:
-                  </label>
-                  <textarea
-                    name="repair.corrective_action"
-                    value={formData.repair?.corrective_action || ""}
-                    onChange={handleChange}
-                    className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded text-amber-300 focus:outline-none focus:ring-1 focus:ring-amber-400"
-                    rows={2}
-                    required
-                  />
-                </div>
+
+                {renderActionRows()}
+
                 <div>
                   <label className="block text-sm mb-1 font-bold">NOTES:</label>
                   <textarea
@@ -737,9 +909,11 @@ const EventModal = ({ onClose, onSubmit }: EventModalProps) => {
                 onChange={handleChange}
                 className="w-full p-2 bg-gray-900 border-2 border-amber-400 rounded text-amber-300 focus:outline-none focus:ring-1 focus:ring-amber-400"
               >
-                <option value="open">OPEN</option>
-                <option value="in progress">IN PROGRESS</option>
-                <option value="closed">CLOSED</option>
+                {EVENT_STATUSES.map((status) => (
+                  <option key={status} value={status}>
+                    {status.toUpperCase()}
+                  </option>
+                ))}
               </select>
             </div>
           </form>

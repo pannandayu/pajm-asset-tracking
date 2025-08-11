@@ -42,6 +42,8 @@ export default async function handler(
     );
     const specificEvent = await query(specificQuery, [eventId]);
 
+    console.log(specificEvent);
+
     let specificData;
 
     switch (eventCode) {

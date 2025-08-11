@@ -1,7 +1,7 @@
 import ArchiveUpdateForm from "@/components/ArchiveUpdateForm";
 import AssetUpdateForm from "@/components/AssetUpdateForm";
-import ComponentForm from "@/components/ComponentForm";
 import ComplementaryForm from "@/components/ComplementaryForm";
+import ComponentForm from "@/components/ComponentForm";
 import DataRow from "@/components/DataRow";
 import { AssetPdfDocument } from "@/components/GeneratePdf";
 import { useAuth } from "@/context/AuthContext";
@@ -430,12 +430,14 @@ const AssetDetail = () => {
                   />
                 )}
 
-                <button
-                  className="mt-4 px-4 py-2 bg-amber-700 hover:bg-amber-500 text-black border-2 border-amber-500 font-bold transition-all"
-                  onClick={() => setShowUpdateAssetForm(true)}
-                >
-                  Update Asset's State
-                </button>
+                {auth.user.tagging !== "2" && (
+                  <button
+                    className="mt-4 px-4 py-2 bg-amber-700 hover:bg-amber-500 text-black border-2 border-amber-500 font-bold transition-all"
+                    onClick={() => setShowUpdateAssetForm(true)}
+                  >
+                    Update Asset's State
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -451,7 +453,7 @@ const AssetDetail = () => {
               />
               <DataRow
                 label="Purchase Order Number"
-                data={selectedAsset.purchase_order_number}
+                data={selectedAsset.purchase_order_number || "-"}
               />
               <DataRow label="Vendor" data={selectedAsset.vendor_supplier} />
               <DataRow label="Warranty" data={selectedAsset.warranty} />

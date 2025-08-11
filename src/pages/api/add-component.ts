@@ -42,10 +42,11 @@ export default async function handler(
             warranty: component.warranty,
             status: component.status,
             active_date: component.active_date,
+            notes: component.notes_purchase,
           },
         ]),
         component.expected_lifespan,
-        component.notes,
+        component.notes_component,
       ]
     );
 

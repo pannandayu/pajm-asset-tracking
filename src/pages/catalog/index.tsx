@@ -76,14 +76,16 @@ const CatalogPage: NextPage = () => {
             <p className="text-amber-400 text-sm">
               DATABASE STATUS: OPERATIONAL
             </p>
-            <div className="flex justify-between gap-4">
-              <button
-                onClick={() => setAssetModal(true)}
-                className="bg-amber-600 hover:bg-amber-500 text-black font-bold py-2 px-4 border-b-4 border-amber-700 hover:border-amber-600 rounded-sm transition-all text-sm mt-2"
-              >
-                RECORD NEW ASSET
-              </button>
-            </div>
+            {auth.user.tagging !== "2" && (
+              <div className="flex justify-between gap-4">
+                <button
+                  onClick={() => setAssetModal(true)}
+                  className="bg-amber-600 hover:bg-amber-500 text-black font-bold py-2 px-4 border-b-4 border-amber-700 hover:border-amber-600 rounded-sm transition-all text-sm mt-2"
+                >
+                  RECORD NEW ASSET
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Catalog Content */}
