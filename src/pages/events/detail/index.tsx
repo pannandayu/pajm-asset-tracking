@@ -549,7 +549,7 @@ const EventDetail = () => {
     try {
       setLoading(true);
 
-      console.log(editData);
+      // console.log(editData);
       // setLoading(false);
       // return;
 

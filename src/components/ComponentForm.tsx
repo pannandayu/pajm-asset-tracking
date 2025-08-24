@@ -40,10 +40,10 @@ const ComponentForm = ({ assetId, onClose, onSubmit }: ComponentFormProps) => {
   const handleSubmit = async () => {
     setIsSaving(true);
 
-    console.log({
-      assetId,
-      component,
-    });
+    // console.log({
+    //   assetId,
+    //   component,
+    // });
 
     // return;
 

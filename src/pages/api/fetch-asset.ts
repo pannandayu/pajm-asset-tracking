@@ -49,7 +49,8 @@ LEFT JOIN
 LEFT JOIN 
     asset.component co ON cor.component_id = co.id
 GROUP BY 
-    d.id, d.name;`);
+    d.id, d.name;
+`);
     return res.status(200).json(data);
   } catch (error) {
     console.error("Auth check error:", error);

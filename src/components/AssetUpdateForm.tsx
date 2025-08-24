@@ -9,6 +9,7 @@ export interface AssetUpdateFormProps {
     status: "Active" | "Inactive";
     active_date: Date;
     notes: string;
+    primary_user: string;
   }) => Promise<void>;
   onCancel: () => void;
 }
@@ -18,6 +19,7 @@ const AssetUpdateForm = ({ asset, onSave, onCancel }: AssetUpdateFormProps) => {
   const [activeDate, setActiveDate] = useState<string>(
     dayjs(asset.active_date).format("YYYY-MM-DD")
   );
+  const [primaryUser, setPrimaryUser] = useState(asset.primary_user);
   const [notes, setNotes] = useState(asset.notes);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -27,6 +29,7 @@ const AssetUpdateForm = ({ asset, onSave, onCancel }: AssetUpdateFormProps) => {
       status,
       active_date: new Date(activeDate),
       notes,
+      primary_user: primaryUser,
     });
   };
 
@@ -56,6 +59,17 @@ const AssetUpdateForm = ({ asset, onSave, onCancel }: AssetUpdateFormProps) => {
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
               </select>
+            }
+          />
+
+          <DataRow
+            label="Primary User"
+            data={
+              <input
+                className="bg-gray-700 text-amber-300 border border-amber-400 p-1"
+                value={primaryUser}
+                onChange={(e) => setPrimaryUser(e.target.value)}
+              />
             }
           />
 

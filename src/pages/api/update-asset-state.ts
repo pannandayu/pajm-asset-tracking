@@ -9,7 +9,7 @@ export default async function handler(
     return res.status(405).json({ message: "Method not allowed" });
   }
 
-  const { id, status, active_date, notes } = req.body;
+  const { id, status, active_date, primary_user, notes } = req.body;
 
   if (!id || !status || !active_date) {
     return res.status(400).json({ message: "Missing required fields" });
@@ -17,8 +17,8 @@ export default async function handler(
 
   try {
     await query(
-      "UPDATE asset.data SET status = $1, active_date = $2, notes = $3 WHERE id = $4",
-      [status, active_date, notes, id]
+      "UPDATE asset.data SET status = $1, active_date = $2, notes = $3, primary_user = $4 WHERE id = $5",
+      [status, active_date, notes, primary_user, id]
     );
 
     return res.status(200).json({ success: true });

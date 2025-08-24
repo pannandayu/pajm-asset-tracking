@@ -194,7 +194,9 @@ const ArchiveUpdateForm = ({
                           type="date"
                           name="purchase_date"
                           value={
-                            archiveRecords[activeRecordIndex].purchase_date
+                            archiveRecords[
+                              activeRecordIndex
+                            ].purchase_date.split("T")[0]
                           }
                           onChange={(e) =>
                             handleArchiveChange(activeRecordIndex, e)

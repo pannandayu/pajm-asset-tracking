@@ -351,11 +351,11 @@ const EventModal = ({ onClose, onSubmit }: EventModalProps) => {
           break;
       }
 
-      console.log({
-        eventData,
-        specificEventData,
-        eventType,
-      });
+      // console.log({
+      //   eventData,
+      //   specificEventData,
+      //   eventType,
+      // });
       // setIsSaving(false);
       // return;
 

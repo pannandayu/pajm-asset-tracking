@@ -191,7 +191,8 @@ const AssetModal = ({
         onSubmit();
         onClose();
       } else {
-        console.error("Failed to submit asset");
+        const body = await response.json();
+        console.log(body.error);
         setIsSaving(false);
       }
     } catch (error) {

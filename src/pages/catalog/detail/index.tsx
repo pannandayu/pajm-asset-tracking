@@ -153,10 +153,12 @@ const AssetDetail = () => {
 
   const handleUpdateAssetState = async ({
     status,
+    primary_user,
     active_date,
     notes,
   }: {
     status: string;
+    primary_user: string;
     active_date: Date;
     notes: string;
   }) => {
@@ -166,6 +168,7 @@ const AssetDetail = () => {
       const data = {
         id: selectedAsset.id,
         status,
+        primary_user,
         active_date: dayjs(active_date).format("YYYY-MM-DD"),
         notes,
       };
@@ -423,8 +426,13 @@ const AssetDetail = () => {
                 {showUpdateAssetForm && (
                   <AssetUpdateForm
                     asset={selectedAsset}
-                    onSave={({ status, active_date, notes }) =>
-                      handleUpdateAssetState({ status, active_date, notes })
+                    onSave={({ status, active_date, primary_user, notes }) =>
+                      handleUpdateAssetState({
+                        status,
+                        active_date,
+                        primary_user,
+                        notes,
+                      })
                     }
                     onCancel={() => setShowUpdateAssetForm(false)}
                   />
