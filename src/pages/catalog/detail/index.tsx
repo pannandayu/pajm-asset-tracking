@@ -500,12 +500,14 @@ const AssetDetail = () => {
                 >
                   {showComplementary ? "Hide" : "Show"}
                 </button>
-                <button
-                  onClick={() => setShowComplementaryForm(true)}
-                  className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-black font-bold rounded"
-                >
-                  Add New
-                </button>
+                {auth.user.tagging !== "2" && (
+                  <button
+                    onClick={() => setShowComplementaryForm(true)}
+                    className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-black font-bold rounded"
+                  >
+                    Add New
+                  </button>
+                )}
               </div>
             </div>
             {showComplementary && renderComplementaryItems()}
@@ -523,12 +525,14 @@ const AssetDetail = () => {
                 >
                   {showComponents ? "Hide" : "Show"}
                 </button>
-                <button
-                  onClick={() => setShowComponentForm(true)}
-                  className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-black font-bold rounded"
-                >
-                  Add New
-                </button>
+                {auth.user.tagging !== "2" && (
+                  <button
+                    onClick={() => setShowComponentForm(true)}
+                    className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-black font-bold rounded"
+                  >
+                    Add New
+                  </button>
+                )}
               </div>
             </div>
             {showComponents && renderComponentItems()}
@@ -542,6 +546,9 @@ const AssetDetail = () => {
               ← BACK
             </button>
             <PDFDownloadLink
+              onClick={() => {
+                console.log(selectedAsset.image_url);
+              }}
               document={
                 <AssetPdfDocument
                   asset={selectedAsset}

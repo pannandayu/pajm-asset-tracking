@@ -68,7 +68,7 @@ export default async function handler(
       .toLowerCase()
       .replace(/[ /]/g, "_")}/${mainAsset.sub_category
       .toLowerCase()
-      .replace(/[ /]/g, "_")}/${mainAsset.id}.jpeg`;
+      .replace(/[ /]/g, "_")}/${mainAsset.id}.jpg`;
 
     // Insert main asset
     const mainAssetQuery = `
