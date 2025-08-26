@@ -6,6 +6,7 @@ import DataRow from "@/components/DataRow";
 import { AssetPdfDocument } from "@/components/GeneratePdf";
 import { useAuth } from "@/context/AuthContext";
 import { assetAtom } from "@/context/jotai";
+import Layout from "@/pages/Layout";
 import { Asset, ComplementaryItem, ComponentItem } from "@/types";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import dayjs from "dayjs";
@@ -361,235 +362,241 @@ const AssetDetail = () => {
   return (
     <div className="min-h-screen bg-gray-700 text-amber-300 p-4 font-mono">
       {auth.user && selectedAsset && (
-        <div className="max-w-6xl mx-auto border-2 border-amber-400 bg-gray-800 p-6 shadow-lg shadow-amber-400/20">
-          <div className="mb-6 border-b-2 border-amber-400 pb-4">
-            <h1 className="text-3xl font-bold tracking-wider text-center">
-              ASSET DETAILS
-            </h1>
-          </div>
-
-          <div className="flex flex-col md:flex-row gap-8 mb-8">
-            <div className="flex-1">
-              <div className="flex justify-center mb-6 mt-2">
-                <Image
-                  src={selectedAsset.image_url}
-                  alt={selectedAsset.id + " - " + selectedAsset.name}
-                  height={500}
-                  width={550}
-                />
-              </div>
-              {selectedAsset.notes && (
-                <div className="flex flex-col gap-2">
-                  <h1 className="text-xl">Notes</h1>
-                  <hr />
-                  <p>{selectedAsset.notes}</p>
-                </div>
-              )}
+        <Layout>
+          <div className="max-w-6xl mx-auto border-2 border-amber-400 bg-gray-800 p-6 shadow-lg shadow-amber-400/20">
+            <div className="mb-6 border-b-2 border-amber-400 pb-4">
+              <h1 className="text-3xl font-bold tracking-wider text-center">
+                ASSET DETAILS
+              </h1>
             </div>
 
-            <div className="flex-1">
-              <div className="mb-6">
-                <h2 className="text-xl font-bold mb-3 border-b border-amber-400 pb-2">
-                  TECHNICAL DETAILS
-                </h2>
-                <DataRow label="Asset ID" data={selectedAsset.id} />
-                <DataRow label="Asset Name" data={selectedAsset.name} />
-                <DataRow label="Brand" data={selectedAsset.brand || "-"} />
-                <DataRow label="Model" data={selectedAsset.model || "-"} />
-                <DataRow label="Category" data={selectedAsset.category} />
-                <DataRow
-                  label="Sub-Category"
-                  data={selectedAsset.sub_category}
-                />
-                <DataRow
-                  label="Serial Number"
-                  data={selectedAsset.serial_number || "-"}
-                />
-                <DataRow
-                  label="Part Number"
-                  data={selectedAsset.part_number || "-"}
-                />
-                <DataRow
-                  label="Ownership (Dept.)"
-                  data={selectedAsset.department_owner}
-                />
-                <DataRow
-                  label="Primary User"
-                  data={selectedAsset.primary_user}
-                />
-                <DataRow
-                  label="First Usage/Installation Date"
-                  data={dayjs(selectedAsset.active_date).format("DD MMMM YYYY")}
-                />
-                <DataRow label="Status" data={selectedAsset.status} />
-
-                {showUpdateAssetForm && (
-                  <AssetUpdateForm
-                    asset={selectedAsset}
-                    onSave={({ status, active_date, primary_user, notes }) =>
-                      handleUpdateAssetState({
-                        status,
-                        active_date,
-                        primary_user,
-                        notes,
-                      })
-                    }
-                    onCancel={() => setShowUpdateAssetForm(false)}
+            <div className="flex flex-col md:flex-row gap-8 mb-8">
+              <div className="flex-1">
+                <div className="flex justify-center mb-6 mt-2">
+                  <Image
+                    src={selectedAsset.image_url}
+                    alt={selectedAsset.id + " - " + selectedAsset.name}
+                    height={500}
+                    width={550}
                   />
-                )}
-
-                {auth.user.tagging !== "2" && (
-                  <button
-                    className="mt-4 px-4 py-2 bg-amber-700 hover:bg-amber-500 text-black border-2 border-amber-500 font-bold transition-all"
-                    onClick={() => setShowUpdateAssetForm(true)}
-                  >
-                    Update Asset's State
-                  </button>
+                </div>
+                {selectedAsset.notes && (
+                  <div className="flex flex-col gap-2">
+                    <h1 className="text-xl">Notes</h1>
+                    <hr />
+                    <p>{selectedAsset.notes}</p>
+                  </div>
                 )}
               </div>
-            </div>
-          </div>
 
-          {auth.user.tagging === "0" && (
-            <div className="mb-8">
-              <h2 className="text-xl font-bold mb-3 border-b border-amber-400 pb-2">
-                FINANCIAL INFO
-              </h2>
-              <DataRow
-                label="Purchase Date"
-                data={dayjs(selectedAsset.purchase_date).format("DD MMMM YYYY")}
-              />
-              <DataRow
-                label="Purchase Order Number"
-                data={selectedAsset.purchase_order_number || "-"}
-              />
-              <DataRow label="Vendor" data={selectedAsset.vendor_supplier} />
-              <DataRow label="Warranty" data={selectedAsset.warranty} />
-              <DataRow
-                label="Purchase Price"
-                data={formatCurrency(selectedAsset.purchase_price)}
-              />
-              <DataRow
-                label="Expected Lifespan"
-                data={selectedAsset.expected_lifespan + " years"}
-              />
-              <DataRow
-                label="Depreciation Method"
-                data={selectedAsset.depreciation_method}
-              />
-              <DataRow
-                label="Annual Depreciation Rate"
-                data={selectedAsset.depreciation_rate + "%"}
-              />
-              <DataRow
-                label="Current Book Value"
-                data={formatCurrency(selectedAsset.current_book_value)}
-              />
-            </div>
-          )}
+              <div className="flex-1">
+                <div className="mb-6">
+                  <h2 className="text-xl font-bold mb-3 border-b border-amber-400 pb-2">
+                    TECHNICAL DETAILS
+                  </h2>
+                  <DataRow label="Asset ID" data={selectedAsset.id} />
+                  <DataRow label="Asset Name" data={selectedAsset.name} />
+                  <DataRow label="Brand" data={selectedAsset.brand || "-"} />
+                  <DataRow label="Model" data={selectedAsset.model || "-"} />
+                  <DataRow label="Category" data={selectedAsset.category} />
+                  <DataRow
+                    label="Sub-Category"
+                    data={selectedAsset.sub_category}
+                  />
+                  <DataRow
+                    label="Serial Number"
+                    data={selectedAsset.serial_number || "-"}
+                  />
+                  <DataRow
+                    label="Part Number"
+                    data={selectedAsset.part_number || "-"}
+                  />
+                  <DataRow
+                    label="Ownership (Dept.)"
+                    data={selectedAsset.department_owner}
+                  />
+                  <DataRow
+                    label="Primary User"
+                    data={selectedAsset.primary_user}
+                  />
+                  <DataRow
+                    label="First Usage/Installation Date"
+                    data={dayjs(selectedAsset.active_date).format(
+                      "DD MMMM YYYY"
+                    )}
+                  />
+                  <DataRow label="Status" data={selectedAsset.status} />
 
-          <div className="mb-8">
-            <div className="flex justify-between items-center mb-2">
-              <h2 className="text-2xl font-bold border-b border-amber-400 pb-2">
-                COMPLEMENTARY ASSETS
-              </h2>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setShowComplementary(!showComplementary)}
-                  className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-black font-bold rounded"
-                >
-                  {showComplementary ? "Hide" : "Show"}
-                </button>
-                {auth.user.tagging !== "2" && (
-                  <button
-                    onClick={() => setShowComplementaryForm(true)}
-                    className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-black font-bold rounded"
-                  >
-                    Add New
-                  </button>
-                )}
+                  {showUpdateAssetForm && (
+                    <AssetUpdateForm
+                      asset={selectedAsset}
+                      onSave={({ status, active_date, primary_user, notes }) =>
+                        handleUpdateAssetState({
+                          status,
+                          active_date,
+                          primary_user,
+                          notes,
+                        })
+                      }
+                      onCancel={() => setShowUpdateAssetForm(false)}
+                    />
+                  )}
+
+                  {auth.user.tagging !== "2" && (
+                    <button
+                      className="mt-4 px-4 py-2 bg-amber-700 hover:bg-amber-500 text-black border-2 border-amber-500 font-bold transition-all"
+                      onClick={() => setShowUpdateAssetForm(true)}
+                    >
+                      Update Asset's State
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
-            {showComplementary && renderComplementaryItems()}
-          </div>
 
-          <div className="mb-8">
-            <div className="flex justify-between items-center mb-2">
-              <h2 className="text-2xl font-bold border-b border-amber-400 pb-2 mb-2">
-                COMPONENT ITEMS
-              </h2>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setShowComponents(!showComponents)}
-                  className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-black font-bold rounded"
-                >
-                  {showComponents ? "Hide" : "Show"}
-                </button>
-                {auth.user.tagging !== "2" && (
-                  <button
-                    onClick={() => setShowComponentForm(true)}
-                    className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-black font-bold rounded"
-                  >
-                    Add New
-                  </button>
-                )}
-              </div>
-            </div>
-            {showComponents && renderComponentItems()}
-          </div>
-
-          <div className="flex justify-between">
-            <button
-              onClick={handleBack}
-              className="px-4 py-2 bg-amber-700 hover:bg-amber-600 text-black border-2 border-amber-500 font-bold transition-all"
-            >
-              ← BACK
-            </button>
-            <PDFDownloadLink
-              onClick={() => {
-                console.log(selectedAsset.image_url);
-              }}
-              document={
-                <AssetPdfDocument
-                  asset={selectedAsset}
-                  assetImageUrl={selectedAsset.image_url}
-                  tagging={auth.user.tagging}
-                  username={auth.user.name}
+            {auth.user.tagging === "0" && (
+              <div className="mb-8">
+                <h2 className="text-xl font-bold mb-3 border-b border-amber-400 pb-2">
+                  FINANCIAL INFO
+                </h2>
+                <DataRow
+                  label="Purchase Date"
+                  data={dayjs(selectedAsset.purchase_date).format(
+                    "DD MMMM YYYY"
+                  )}
                 />
-              }
-              fileName={`${selectedAsset.id}_${selectedAsset.name}_${
-                dayjs().format("DDMMYY") + auth.user.tagging
-              }_Data.pdf`}
-              className="px-4 py-2 bg-amber-700 hover:bg-amber-500 text-black border-2 border-amber-500 font-bold transition-all"
-            >
-              {({ loading }) =>
-                loading ? "Preparing document..." : "Download PDF"
-              }
-            </PDFDownloadLink>
+                <DataRow
+                  label="Purchase Order Number"
+                  data={selectedAsset.purchase_order_number || "-"}
+                />
+                <DataRow label="Vendor" data={selectedAsset.vendor_supplier} />
+                <DataRow label="Warranty" data={selectedAsset.warranty} />
+                <DataRow
+                  label="Purchase Price"
+                  data={formatCurrency(selectedAsset.purchase_price)}
+                />
+                <DataRow
+                  label="Expected Lifespan"
+                  data={selectedAsset.expected_lifespan + " years"}
+                />
+                <DataRow
+                  label="Depreciation Method"
+                  data={selectedAsset.depreciation_method}
+                />
+                <DataRow
+                  label="Annual Depreciation Rate"
+                  data={selectedAsset.depreciation_rate + "%"}
+                />
+                <DataRow
+                  label="Current Book Value"
+                  data={formatCurrency(selectedAsset.current_book_value)}
+                />
+              </div>
+            )}
+
+            <div className="mb-8">
+              <div className="flex justify-between items-center mb-2">
+                <h2 className="text-2xl font-bold border-b border-amber-400 pb-2">
+                  COMPLEMENTARY ASSETS
+                </h2>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setShowComplementary(!showComplementary)}
+                    className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-black font-bold rounded"
+                  >
+                    {showComplementary ? "Hide" : "Show"}
+                  </button>
+                  {auth.user.tagging !== "2" && (
+                    <button
+                      onClick={() => setShowComplementaryForm(true)}
+                      className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-black font-bold rounded"
+                    >
+                      Add New
+                    </button>
+                  )}
+                </div>
+              </div>
+              {showComplementary && renderComplementaryItems()}
+            </div>
+
+            <div className="mb-8">
+              <div className="flex justify-between items-center mb-2">
+                <h2 className="text-2xl font-bold border-b border-amber-400 pb-2 mb-2">
+                  COMPONENT ITEMS
+                </h2>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setShowComponents(!showComponents)}
+                    className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-black font-bold rounded"
+                  >
+                    {showComponents ? "Hide" : "Show"}
+                  </button>
+                  {auth.user.tagging !== "2" && (
+                    <button
+                      onClick={() => setShowComponentForm(true)}
+                      className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-black font-bold rounded"
+                    >
+                      Add New
+                    </button>
+                  )}
+                </div>
+              </div>
+              {showComponents && renderComponentItems()}
+            </div>
+
+            <div className="flex justify-between">
+              <button
+                onClick={handleBack}
+                className="px-4 py-2 bg-amber-700 hover:bg-amber-600 text-black border-2 border-amber-500 font-bold transition-all"
+              >
+                ← BACK
+              </button>
+              <PDFDownloadLink
+                onClick={() => {
+                  console.log(selectedAsset.image_url);
+                }}
+                document={
+                  <AssetPdfDocument
+                    asset={selectedAsset}
+                    assetImageUrl={selectedAsset.image_url}
+                    tagging={auth.user.tagging}
+                    username={auth.user.name}
+                  />
+                }
+                fileName={`${selectedAsset.id}_${selectedAsset.name}_${
+                  dayjs().format("DDMMYY") + auth.user.tagging
+                }_Data.pdf`}
+                className="px-4 py-2 bg-amber-700 hover:bg-amber-500 text-black border-2 border-amber-500 font-bold transition-all"
+              >
+                {({ loading }) =>
+                  loading ? "Preparing document..." : "Download PDF"
+                }
+              </PDFDownloadLink>
+            </div>
+
+            {showComponentForm && (
+              <ComponentForm
+                assetId={selectedAsset.id}
+                onClose={() => setShowComponentForm(false)}
+                onSubmit={() => {
+                  setShowComponentForm(false);
+                  reload();
+                }}
+              />
+            )}
+
+            {showComplementaryForm && (
+              <ComplementaryForm
+                assetId={selectedAsset.id}
+                onClose={() => setShowComplementaryForm(false)}
+                onSubmit={() => {
+                  setShowComplementaryForm(false);
+                  reload();
+                }}
+              />
+            )}
           </div>
-
-          {showComponentForm && (
-            <ComponentForm
-              assetId={selectedAsset.id}
-              onClose={() => setShowComponentForm(false)}
-              onSubmit={() => {
-                setShowComponentForm(false);
-                reload();
-              }}
-            />
-          )}
-
-          {showComplementaryForm && (
-            <ComplementaryForm
-              assetId={selectedAsset.id}
-              onClose={() => setShowComplementaryForm(false)}
-              onSubmit={() => {
-                setShowComplementaryForm(false);
-                reload();
-              }}
-            />
-          )}
-        </div>
+        </Layout>
       )}
     </div>
   );

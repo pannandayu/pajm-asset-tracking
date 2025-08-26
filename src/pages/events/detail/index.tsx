@@ -1,4 +1,5 @@
 import { useAuth } from "@/context/AuthContext";
+import Layout from "@/pages/Layout";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { useRouter } from "next/router";
@@ -1128,95 +1129,100 @@ const EventDetail = () => {
   }
 
   return (
-    <PageContainer>
-      <div className="max-w-6xl mx-auto border-2 border-amber-400 bg-gray-800 p-6 shadow-lg shadow-amber-400/20">
-        <HeaderSection title="EVENT DETAILS" subtitle={event.event_id} />
+    <Layout>
+      <PageContainer>
+        <div className="max-w-6xl mx-auto border-2 border-amber-400 bg-gray-800 p-6 shadow-lg shadow-amber-400/20">
+          <HeaderSection title="EVENT DETAILS" subtitle={event.event_id} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <div>
+              <SectionTitle title="GENERAL INFO" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <DetailItem
+                  label="Event Type"
+                  value={event.event_type.toUpperCase()}
+                />
+                <DetailItem label="Asset ID" value={event.asset_id} />
+                <DetailItem label="Asset Name" value={event.asset_name} />
+                {isEditing ? (
+                  <TextAreaInput
+                    label="Description"
+                    name="description"
+                    value={editData.description || ""}
+                    onChange={handleInputChange}
+                    fullWidth
+                  />
+                ) : (
+                  <DetailItem
+                    label="Description"
+                    value={event.description || "-"}
+                  />
+                )}
+                <DetailItem
+                  label="Event Date"
+                  value={dayjs(event.event_date)
+                    .utc()
+                    .format("DD MMM YYYY - HH:mm")}
+                />
+                <DetailItem label="Recorded By" value={event.recorded_by} />
+                {isEditing ? (
+                  <TextInput
+                    label="Status"
+                    name="status"
+                    value={editData.status || ""}
+                    onChange={handleInputChange}
+                  />
+                ) : (
+                  <DetailItem
+                    label="Status"
+                    value={
+                      event.status[0].toUpperCase() + event.status.slice(1)
+                    }
+                  />
+                )}
+              </div>
+            </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-          <div>
-            <SectionTitle title="GENERAL INFO" />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <DetailItem
-                label="Event Type"
-                value={event.event_type.toUpperCase()}
+            <div>
+              <SectionTitle
+                title={`${event.event_type.toUpperCase()} DETAILS`}
               />
-              <DetailItem label="Asset ID" value={event.asset_id} />
-              <DetailItem label="Asset Name" value={event.asset_name} />
-              {isEditing ? (
-                <TextAreaInput
-                  label="Description"
-                  name="description"
-                  value={editData.description || ""}
-                  onChange={handleInputChange}
-                  fullWidth
-                />
-              ) : (
-                <DetailItem
-                  label="Description"
-                  value={event.description || "-"}
-                />
-              )}
-              <DetailItem
-                label="Event Date"
-                value={dayjs(event.event_date)
-                  .utc()
-                  .format("DD MMM YYYY - HH:mm")}
-              />
-              <DetailItem label="Recorded By" value={event.recorded_by} />
-              {isEditing ? (
-                <TextInput
-                  label="Status"
-                  name="status"
-                  value={editData.status || ""}
-                  onChange={handleInputChange}
-                />
-              ) : (
-                <DetailItem
-                  label="Status"
-                  value={event.status[0].toUpperCase() + event.status.slice(1)}
-                />
-              )}
+              {renderEventDetails()}
             </div>
           </div>
 
-          <div>
-            <SectionTitle title={`${event.event_type.toUpperCase()} DETAILS`} />
-            {renderEventDetails()}
-          </div>
-        </div>
-
-        <div className="flex justify-between">
-          <BackButton onClick={handleBack} />
-          <div className="space-x-4">
-            {isEditing ? (
-              <>
+          <div className="flex justify-between">
+            <BackButton onClick={handleBack} />
+            <div className="space-x-4">
+              {isEditing ? (
+                <>
+                  <button
+                    onClick={handleEditToggle}
+                    className="mt-4 px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white border-2 border-gray-500 font-bold transition-all"
+                  >
+                    CANCEL
+                  </button>
+                  <button
+                    onClick={handleSave}
+                    className="mt-4 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-black border-2 border-amber-400 font-bold transition-all"
+                  >
+                    SAVE CHANGES
+                  </button>
+                </>
+              ) : auth.user?.tagging !== "2" ? (
                 <button
                   onClick={handleEditToggle}
-                  className="mt-4 px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white border-2 border-gray-500 font-bold transition-all"
-                >
-                  CANCEL
-                </button>
-                <button
-                  onClick={handleSave}
                   className="mt-4 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-black border-2 border-amber-400 font-bold transition-all"
                 >
-                  SAVE CHANGES
+                  UPDATE EVENT
                 </button>
-              </>
-            ) : auth.user?.tagging !== "2" ? (
-              <button
-                onClick={handleEditToggle}
-                className="mt-4 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-black border-2 border-amber-400 font-bold transition-all"
-              >
-                UPDATE EVENT
-              </button>
-            ) : (
-              <Fragment />
-            )}
+              ) : (
+                <Fragment />
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    </PageContainer>
+      </PageContainer>
+    </Layout>
   );
 };
 
