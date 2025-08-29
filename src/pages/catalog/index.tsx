@@ -361,6 +361,9 @@ const CatalogPage: NextPage = () => {
                                   <span className="text-xs bg-amber-400/20 text-amber-300 px-2 py-1 rounded">
                                     {asset.id}
                                   </span>
+                                  <span className="text-xs bg-amber-400/20 text-amber-300 px-2 py-1 rounded">
+                                    {asset.primary_user}
+                                  </span>
                                 </div>
                                 <div className="flex items-center gap-4 mt-1 sm:mt-0">
                                   <span
@@ -397,9 +400,14 @@ const CatalogPage: NextPage = () => {
                                   {asset.name}
                                 </span>
                                 <div className="flex justify-between items-center">
-                                  <span className="text-xs opacity-70">
-                                    ID: {asset.id}
-                                  </span>
+                                  <div className="flex flex-col gap-1">
+                                    <span className="text-xs opacity-70">
+                                      ID: {asset.id}
+                                    </span>
+                                    <span className="text-xs opacity-70">
+                                      User: {asset.primary_user}
+                                    </span>
+                                  </div>
                                   <span
                                     className={`text-xs px-2 py-1 rounded-sm ${getStatusColor(
                                       asset.status
@@ -408,79 +416,6 @@ const CatalogPage: NextPage = () => {
                                     {asset.status.charAt(0)}
                                   </span>
                                 </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                    {/* Asset Card View */}
-                    {viewMode === "card" &&
-                      (expandedGroup === null || expandedGroup === letter) && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                          {filteredGroups[letter].map((asset) => (
-                            <div
-                              key={asset.id}
-                              className="bg-gray-700 hover:bg-gray-600 border-2 border-amber-400/30 p-4 cursor-pointer transition-all rounded-lg group h-40 flex flex-col justify-between"
-                              onClick={() =>
-                                router.push(
-                                  `${router.basePath}/catalog/detail?id=${asset.id}`
-                                )
-                              }
-                            >
-                              <div>
-                                <h3 className="font-bold text-lg text-amber-300 group-hover:text-amber-200 mb-2 line-clamp-1">
-                                  {asset.name}
-                                </h3>
-                                <span className="text-xs opacity-70 block">
-                                  ID: {asset.id}
-                                </span>
-                              </div>
-                              <div className="flex justify-between items-center">
-                                <span
-                                  className={`text-xs px-2 py-1 rounded-sm ${getStatusColor(
-                                    asset.status
-                                  )}`}
-                                >
-                                  {asset.status.toUpperCase()}
-                                </span>
-                                <MdInfo className="text-amber-400/50 group-hover:text-amber-400" />
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                    {/* Asset Panel View */}
-                    {viewMode === "panel" &&
-                      (expandedGroup === null || expandedGroup === letter) && (
-                        <div className="grid grid-cols-1 gap-2">
-                          {filteredGroups[letter].map((asset) => (
-                            <div
-                              key={asset.id}
-                              className="bg-gray-700 hover:bg-gray-600 border-l-4 border-amber-400 p-4 cursor-pointer transition-all rounded-r-lg group grid grid-cols-3"
-                              onClick={() =>
-                                router.push(
-                                  `${router.basePath}/catalog/detail?id=${asset.id}`
-                                )
-                              }
-                            >
-                              <div className="col-span-2">
-                                <span className="font-bold text-amber-300 group-hover:text-amber-200">
-                                  {asset.name}
-                                </span>
-                                <div className="text-xs opacity-70 mt-1">
-                                  ID: {asset.id}
-                                </div>
-                              </div>
-                              <div className="flex justify-end items-start">
-                                <span
-                                  className={`text-xs px-2 py-1 rounded-sm ${getStatusColor(
-                                    asset.status
-                                  )}`}
-                                >
-                                  {asset.status.toUpperCase()}
-                                </span>
                               </div>
                             </div>
                           ))}
